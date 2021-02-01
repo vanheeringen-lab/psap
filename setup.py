@@ -34,5 +34,5 @@ setup(
     name='psap_cli',
     packages=find_packages(include=['psap_cli', 'psap_cli.*']),
     url='https://github.com/tilschaef/psap_cli',
-    version='0.1.0',
+    version='0.1.0'
 )
