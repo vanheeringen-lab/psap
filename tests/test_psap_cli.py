@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 
-"""Tests for `psap_cli` package."""
+"""Tests for `psap` package."""
 
 
 import unittest
 
-from psap_cli import psap_cli
+from psap import psap
 
 
-class TestPsap_cli(unittest.TestCase):
-    """Tests for `psap_cli` package."""
+class TestPsap(unittest.TestCase):
+    """Tests for `psap` package."""
 
     def setUp(self):
         """Set up test fixtures, if any."""

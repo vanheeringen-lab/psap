@@ -1,1 +1,1 @@
-"""Unit test package for psap_cli."""
+"""Unit test package for psap."""
