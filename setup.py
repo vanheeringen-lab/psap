@@ -25,7 +25,7 @@ setup(
     description="CLI interface for the PSAP classifier, Mierlo, G. van. Predicting protein condensate formation using machine learning (Manuscript in Preparation).",
     entry_points={
         'console_scripts': [
-            'psap_cli=psap_cli.cli:main',
+            'psap=psap.cli:main',
         ],
     },
     license="MIT license",
@@ -34,5 +34,5 @@ setup(
     name='psap',
     packages=find_packages(include=['psap', 'psap.*']),
     url='https://github.com/tilschaef/psap',
-    version='0.1.0'
+    version='0.1.1'
 )
