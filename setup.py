@@ -30,9 +30,9 @@ setup(
     },
     license="MIT license",
     long_description=readme,
-    keywords='psap_cli',
-    name='psap_cli',
-    packages=find_packages(include=['psap_cli', 'psap_cli.*']),
-    url='https://github.com/tilschaef/psap_cli',
+    keywords='psap',
+    name='psap',
+    packages=find_packages(include=['psap', 'psap.*']),
+    url='https://github.com/tilschaef/psap',
     version='0.1.0'
 )
