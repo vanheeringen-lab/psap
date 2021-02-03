@@ -6,7 +6,6 @@ from setuptools import setup, find_packages
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()
-
 with open('requirements.txt') as f:
     requirements = f.read().splitlines()
 
@@ -37,7 +36,6 @@ setup(
     keywords='psap',
     name='psap',
     packages=find_packages(include=['psap', 'psap.*']),
-    install_requires=requirements,
     url='https://github.com/tilschaef/psap',
-    version='0.2.1-alpha'
+    version='0.1.3'
 )

@@ -1,8 +1,7 @@
 """Console script for psap."""
 import argparse
 import sys
-from pathlib import Path
-from psap import export_matrix
+from psap import MakeMatrix
 
 def main():
     """Console script for psap."""
@@ -22,9 +21,7 @@ def main():
     "--out",
     )
     args = parser.parse_args()
-    basename = Path(args.db_fasta).stem
-    #Export pickeled data frame
-    export_matrix(basename, args.db_fasta, args.out)
+    print(MakeMatrix(args.db_fasta))
     
 if __name__ == "__main__":
     sys.exit(main())  # pragma: no cover

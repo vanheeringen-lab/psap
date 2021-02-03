@@ -10,7 +10,6 @@ from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from tqdm.auto import tqdm
 from multiprocessing import Pool
 import time
-from pathlib import Path
 
 RESIDUES = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L',
             'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y']
@@ -62,8 +61,7 @@ class MakeMatrix:
                     name = id[2].split(' ')[0]
                     rows.append([name, uniprot_id, seq])                    
         self.df = pd.DataFrame(rows, columns=['protein_name', 'uniprot_id', 'sequence'])
-        
-def export_matrix(name, fasta_path, out_path, operating_system='Windows'):
+def fasta_to_df(name, fasta_path, operating_system='Windows'):
     # Change pathing
     """ Generates and saves a file which contains features of a protein sequence.
     Parameters:
@@ -72,10 +70,10 @@ def export_matrix(name, fasta_path, out_path, operating_system='Windows'):
         operating_system: String which indicates which operating system is used only 'Windows' available.
     """
     data = MakeMatrix(fasta_path)   
+    print(data)
     now = datetime.datetime.now()
     date = (str(now.day) + '-' + str(now.month)  + '-' +  str(now.year))
     #if operating_system == 'Windows':
-    pkl = Path(out_path,name+'_llps_f2f_'+date+'.pkl')
-    data.df.to_pickle(pkl)
-    print(pkl)
+    data.df.to_pickle('data/Dataframes/'+ name + '_llps_f2f_' + date + '.pkl')
+    print('Generated file: ' + name + '_llps_f2f_' + date + '.pkl')
     return data.df

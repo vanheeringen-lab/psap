@@ -7,10 +7,6 @@ from setuptools import setup, find_packages
 with open('README.rst') as readme_file:
     readme = readme_file.read()
 
-with open('requirements.txt') as f:
-    requirements = f.read().splitlines()
-
-
 setup(
     author="Tilman Schaefers",
     author_email='tilman.schaefers@ru.nl',
@@ -29,7 +25,7 @@ setup(
     description="CLI interface for the PSAP classifier, Mierlo, G. van. Predicting protein condensate formation using machine learning (Manuscript in Preparation).",
     entry_points={
         'console_scripts': [
-            'psap=psap.cli:main',
+            'psap_cli=psap_cli.cli:main',
         ],
     },
     license="MIT license",
@@ -37,7 +33,6 @@ setup(
     keywords='psap',
     name='psap',
     packages=find_packages(include=['psap', 'psap.*']),
-    install_requires=requirements,
     url='https://github.com/tilschaef/psap',
-    version='0.2.1-alpha'
+    version='0.1.1'
 )

@@ -1,8 +1,7 @@
 """Top-level package for psap."""
-from .psap import export_matrix
+from .psap import MakeMatrix
 
-__all__ = ["export_matrix"]
-
+__all__ = ["MakeMatrix"]
 
 __author__ = """Tilman Schaefers"""
 __email__ = 'tilman.schaefers@ru.nl'

@@ -75,7 +75,7 @@ def export_matrix(name, fasta_path, out_path, operating_system='Windows'):
     now = datetime.datetime.now()
     date = (str(now.day) + '-' + str(now.month)  + '-' +  str(now.year))
     #if operating_system == 'Windows':
-    pkl = Path(out_path,name+'_llps_f2f_'+date+'.pkl')
+    pkl = Path(out_path,name,'_llps_f2f_',date,'.pkl')
     data.df.to_pickle(pkl)
-    print(pkl)
+    print('Generated file: ' + name + '_llps_f2f_' + date + '.pkl')
     return data.df

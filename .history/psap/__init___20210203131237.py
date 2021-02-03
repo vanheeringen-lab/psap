@@ -1,7 +1,7 @@
 """Top-level package for psap."""
-from .psap import export_matrix
+from .psap import MakeMatrix
 
-__all__ = ["export_matrix"]
+__all__ = ["fasta_to_df"]
 
 
 __author__ = """Tilman Schaefers"""
