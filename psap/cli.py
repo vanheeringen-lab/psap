@@ -21,10 +21,14 @@ def main():
     "-o",
     "--out",
     )
+    parser.add_argument(
+    "-id",
+    "--id_name",
+    )
     args = parser.parse_args()
     basename = Path(args.db_fasta).stem
-    #Export pickeled data frame
-    export_matrix(basename, args.db_fasta, args.out)
+    #Pickle training-set
+    export_matrix(basename, args.db_fasta, args.out, args.id_name)
     
 if __name__ == "__main__":
     sys.exit(main())  # pragma: no cover
