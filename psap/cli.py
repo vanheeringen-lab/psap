@@ -3,7 +3,7 @@ import argparse
 import sys
 from pathlib import Path
 from .util import export_matrix
-
+import psap
 
 def main():
     """Console script for psap."""
@@ -12,7 +12,7 @@ def main():
         "-v",
         "--version",
         action="version",
-        version="0.1.4-alpha"
+        version=psap.__version__
     )
     parser.add_argument(
         "-dbf",
