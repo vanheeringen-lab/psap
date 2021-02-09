@@ -3,6 +3,7 @@
 """The setup script."""
 
 from setuptools import setup, find_packages
+import versioneer
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()
@@ -36,8 +37,9 @@ setup(
     long_description=readme,
     keywords='psap',
     name='psap',
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
     packages=find_packages(include=['psap', 'psap.*']),
     install_requires=requirements,
-    url='https://github.com/tilschaef/psap',
-    version='0.2.8-alpha'
+    url='https://github.com/tilschaef/psap'
 )
