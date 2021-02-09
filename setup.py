@@ -39,5 +39,5 @@ setup(
     packages=find_packages(include=['psap', 'psap.*']),
     install_requires=requirements,
     url='https://github.com/tilschaef/psap',
-    version='0.2.4-alpha'
+    version='0.2.5-alpha'
 )
