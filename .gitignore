@@ -107,3 +107,6 @@ ENV/
 .vscode/
 .idea/
 .history/
+
+# Versioneer
+ __pycache__/
