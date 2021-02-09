@@ -2,7 +2,7 @@
 import argparse
 import sys
 from pathlib import Path
-from psap import export_matrix
+from .util import export_matrix
 
 
 def main():

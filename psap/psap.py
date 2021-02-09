@@ -1,107 +1,11 @@
 """Main module."""
-import datetime
 import pandas as pd
 from Bio import SeqIO
-from scipy import signal
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from tqdm.auto import tqdm
 import time
-from pathlib import Path
+from scipy import signal
 
-uniprot_ids = '''Q99700
-O60885
-Q14781
-P45973
-P38432
-Q7Z5Q1
-O00571
-Q9NQI0
-O43781
-Q04637
-Q15056
-P15502
-Q01844
-P22087
-Q06787
-P35637
-Q13283
-Q9UN86
-P10071
-P62993
-Q13151
-P09651
-Q32P51
-P22626
-P51991
-O14979
-P31943
-P55795
-P31942
-O43561
-P10636
-P43243
-Q15648
-P19338
-P06748
-Q15233
-P52948
-Q01860
-P11940
-P29590
-Q8WXF1
-Q96PK6
-P98179
-P23246
-Q16637
-P00441
-Q07889
-P23497
-Q07955
-Q01130
-O95793
-O75683
-Q92804
-Q13148
-Q15554
-P31483
-Q01085
-Q9UHD9
-P46937
-Q15059
-P10644
-P54727
-Q13501
-Q9NPI6
-O00444
-Q53HL2
-Q9ULW0
-Q9Y6A5
-Q96LT7
-P06748
-Q16236
-O43823
-Q07157
-Q9UDY2
-O95049
-Q9Y6M1
-Q6NT89
-Q8NC56
-P04150
-Q9BYJ9
-Q9Y5A9
-Q7Z739
-P10997
-Q9GZV5
-P51608
-O14979
-P43351
-Q08379
-P08621
-Q15424
-Q16630
-P18615
-P48443
-'''
 
 RESIDUES = ['A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L',
             'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'Y']
@@ -116,11 +20,12 @@ HP = {'A': 1.8, 'R': -4.5, 'N': -3.5, 'D': -3.5, 'C': 2.5,
 class MakeMatrix:
     def __init__(self, dbfasta):
         self.df = pd.DataFrame()
+        self.dbfasta = dbfasta
         self.add_features()
 
     def add_features(self):
         executables = [
-             'self.fasta2df(dbfasta)',
+             'self.fasta2df(self.dbfasta)',
              'self.amino_acid_analysis()',
              'self.add_biochemical_combinations()',
              'self.add_lowcomplexity_features()'
@@ -132,10 +37,10 @@ class MakeMatrix:
             end = time.time()
             print(str(round(end - start, 2))+'s '+e)
 
-    def fasta2df(self, dbfasta):
+    def fasta2df(self):
         rows = list()
-        with open(dbfasta) as f:
-            for record in SeqIO.parse(dbfasta, 'fasta'):
+        with open(self.dbfasta) as f:
+            for record in SeqIO.parse(self.dbfasta, 'fasta'):
                 seqdict = dict()
                 seq = str(record.seq)
                 id = record.description.split('|')
@@ -157,6 +62,7 @@ class MakeMatrix:
         for index, row in self.df.iterrows():
             hpilst = pd.Series(list(row['sequence'])).map(HP).tolist()
             self.df.loc[index, 'HydroPhobicIndex'] = HydroPhobicIndex(hpilst)
+
 
     def amino_acid_analysis(self):
         for res in RESIDUES:
@@ -183,6 +89,13 @@ class MakeMatrix:
             self.df.loc[index, 'idr_70'] = sum(i > .7 for i in list(idr)) / len(str(row['sequence']))
             self.df.loc[index, 'idr_80'] = sum(i > .8 for i in list(idr)) / len(str(row['sequence']))
             self.df.loc[index, 'idr_90'] = sum(i > .9 for i in list(idr)) / len(str(row['sequence']))
+
+    @staticmethod
+    def convolve_signal(sig, window=25):
+        win = signal.hann(window)
+        sig = signal.convolve(sig, win, mode='same') / sum(win)
+        return sig
+
 
     def add_hydrophobic_features(self):
         hpi0, hpi1, hpi2, hpi3, hpi4, hpi5 = list(), list(), list(), list(), list(), list()
@@ -304,52 +217,11 @@ class MakeMatrix:
         self.df['lcs_scores'] = lcs_scores
         self.df['lcs_lowest_complexity'] = lcs_lowest_complexity
 
-    def add_plaac(self):
-        plaac = CWD+'/data/plaac/plaac_swissprot140219.tsv'
-        plaac = pd.read_csv(plaac, sep='\t')
-        plaac[['database', 'accession', 'name']] = plaac['SEQid'].str.split('|',expand=True)
-        plaac = plaac.drop(['SEQid', 'database', 'name', 'PAPAaa', 'STARTaa',
-                            'ENDaa', 'COREaa', 'MW', 'MWstart', 'MWend', 'MWlen'], axis=1)
-        self.df = pd.merge(self.df, plaac, left_on='uniprot_id', right_on='accession')
-        self.df = self.df.drop('accession', axis=1)
 
 
-def convolve_signal(sig, window=25):
-    win = signal.hann(window)
-    sig = signal.convolve(sig, win, mode='same') / sum(win)
-    return sig
 
 
-def annotate(df, uniprot_ids, identifier_name):
-    uniprot_ids = [s.strip() for s in uniprot_ids.splitlines()]
-    df[identifier_name] = 0
-    for prot_id in uniprot_ids:
-        df.loc[df['uniprot_id'] == prot_id, identifier_name] = 1
-        if (len(df.loc[df['uniprot_id'] == prot_id])) == 0:
-            print(prot_id+' is not found.')
-    return df
 
-
-def export_matrix(name, fasta_path, out_path, identifier_name=""):
-    # Change pathing
-    """ Generates and saves a file which contains features of a protein sequence.
-    Parameters:
-        name: Name of the file.
-        fasta_path: Path of the fasta file which needs to be featured.
-        operating_system: String which indicates which operating system is used only 'Windows' available.
-    """
-    data = MakeMatrix(fasta_path)
-    now = datetime.datetime.now()
-    date = (str(now.day) + '-' + str(now.month)  + '-' +  str(now.year))
-    #if operating_system == 'Windows':
-    pkl = Path(out_path,name+'_'+identifier_name+'_'+date+'.pkl')
-    data.df.to_pickle(pkl)
-    print(pkl)
-    print("Adding labels to df")
-    df_ann = annotate(data.df, uniprot_ids, identifier_name)
-    pkl_ann = Path(out_path,name+'_'+identifier_name+'_'+date+'_ann_'+'.pkl')
-    df_ann.to_pickle(pkl_ann)
-    print(pkl_ann)
 
 
 

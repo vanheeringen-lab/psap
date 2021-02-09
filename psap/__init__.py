@@ -1,5 +1,5 @@
 """Top-level package for psap."""
-from .psap import export_matrix
+from .util import export_matrix
 
 __all__ = ["export_matrix"]
 
