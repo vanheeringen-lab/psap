@@ -25,7 +25,7 @@ class MakeMatrix:
 
     def add_features(self):
         executables = [
-             'self.fasta2df(self.dbfasta)',
+             'self.fasta2df()',
              'self.amino_acid_analysis()',
              'self.add_biochemical_combinations()',
              'self.add_lowcomplexity_features()'
