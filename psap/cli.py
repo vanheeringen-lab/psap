@@ -14,21 +14,23 @@ def main():
         "--version",
         action="version",
         version=psap.__version__)
-    parser.add_argument(
+    subparsers = parser.add_subparsers(dest='command')
+    train = subparsers.add_parser('train', help='create psap training-set')
+    train.add_argument(
         "-dbf",
         "--db_fasta",
         default=None,
         required=True,
         help='Path to proteome fasta file'
     )
-    parser.add_argument(
+    train.add_argument(
         "-o",
         "--out",
         default="~",
         required=False,
         help='Output directory for serialized training-set'
     )
-    parser.add_argument(
+    train.add_argument(
         "-cc",
         "--class_column",
         default=None,
@@ -38,7 +40,7 @@ def main():
     args = parser.parse_args()
     basename = Path(args.db_fasta).stem
     # Pickle training-set
-    export_matrix(basename, args.db_fasta, args.out, args.class_cloumn)
+    export_matrix(basename, args.db_fasta, args.out, args.class_column)
 
 
 if __name__ == "__main__":
