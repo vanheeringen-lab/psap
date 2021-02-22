@@ -2,7 +2,7 @@ from .psap import MakeMatrix
 import datetime
 from pathlib import Path
 
-uniprot_ids = """Q99700
+UNIPROT_IDS = """Q99700
 O60885
 Q14781
 P45973
@@ -98,8 +98,8 @@ P48443
 """
 
 
-def annotate(df, uniprot_ids, identifier_name):
-    uniprot_ids = [s.strip() for s in uniprot_ids.splitlines()]
+def annotate(df, identifier_name):
+    uniprot_ids = [s.strip() for s in UNIPROT_IDS.splitlines()]
     df[identifier_name] = 0
     for prot_id in uniprot_ids:
         df.loc[df["uniprot_id"] == prot_id, identifier_name] = 1
@@ -122,7 +122,7 @@ def export_matrix(name, fasta_path, out_path, identifier_name=""):
     data.df.to_pickle(pkl)
     print(pkl)
     print("Adding labels to df")
-    df_ann = annotate(data.df, uniprot_ids, identifier_name)
+    df_ann = annotate(data.df, identifier_name)
     pkl_ann = Path(
         out_path, name + "_" + identifier_name + "_" + date + "_ann_" + ".pkl"
     )
