@@ -57,10 +57,15 @@ def main():
         help="data frame with training data",
     )
     args = parser.parse_args()
-    # basename = Path(args.db_fasta).stem
     # Pickle training-set
-    # export_matrix(basename, args.db_fasta, args.out, args.class_column)
-    run_model(args.analysis, args.instance, args.data_frame)
+    if args.command == "train":
+        export_matrix(
+            Path(args.db_fasta).stem, args.db_fasta, args.out, args.class_column
+        )
+    elif args.command == "classify":
+        run_model(args.analysis, args.instance, args.data_frame)
+    else:
+        print("Incorrect subparser selected")
 
 
 if __name__ == "__main__":
