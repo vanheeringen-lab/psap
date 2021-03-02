@@ -7,48 +7,14 @@ import time
 from scipy import signal
 import os
 import sys
-import warnings
-import statistics
 import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from random import sample
-import collections
-from statistics import mean
 from tqdm.notebook import tqdm
-
-# Preprocessing
 from sklearn.preprocessing import MinMaxScaler
-
-# Sklearn imports
-from sklearn.utils import shuffle
-from sklearn.model_selection import LeaveOneOut
-from sklearn.model_selection import train_test_split
-from sklearn.impute import SimpleImputer
-
-from sklearn.metrics import *
-
-from sklearn.feature_selection import VarianceThreshold
-
-# Different machine learning models from sklearn
-from sklearn.ensemble import ExtraTreesClassifier
-from sklearn.ensemble import GradientBoostingClassifier
-
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.ensemble import AdaBoostClassifier
-from sklearn.datasets import make_moons, make_circles, make_classification
-from sklearn.neural_network import MLPClassifier
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.svm import SVC
-from sklearn.gaussian_process import GaussianProcessClassifier
-from sklearn.gaussian_process.kernels import RBF
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.naive_bayes import GaussianNB
-from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
-from sklearn.linear_model import SGDClassifier
-from sklearn.manifold import TSNE
-from sklearn.metrics import average_precision_score
 
 RESIDUES = [
     "A",
