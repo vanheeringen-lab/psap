@@ -440,6 +440,18 @@ def plot_feature_importance(fi_data, analysis_name, out_dir=""):
     plt.show()
 
 
+def predict_other_df(clf, processed_data, second_df, analysis_name, out_dir):
+    prediction, fi_data = predict_proteome(
+        processed_data,
+        clf,
+        instance="llps",
+        testing_size=0.2,
+        # remove_training=True,
+        second_df=second_df,
+    )
+    prediction.to_csv(f"{out_dir}/{analysis_name}/full_prediction.csv")
+
+
 def predict_proteome(
     df,
     clf,
@@ -515,8 +527,8 @@ def main(
         data, clf, instance=instance, testing_size=0.2, remove_training=False
     )
     # Predict second dataset
-    # if second_df_bool:
-    #    predict_other_df(clf, data, second_df, ANALYSIS_NAME)
+    if second_df_bool:
+        predict_other_df(clf, data, second_df, ANALYSIS_NAME, out_dir)
     # Get Feature Importance
     plot_feature_importance(fi_data, ANALYSIS_NAME, out_dir)
     # Save prediction to .csv
