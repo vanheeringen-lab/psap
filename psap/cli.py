@@ -2,15 +2,14 @@
 import argparse
 import sys
 from pathlib import Path
-from .util import export_matrix
-from .psap import run_model
-import psap
+from psap.util import export_matrix
+from psap.classifier import run_model
 
 
 def main():
     """Console script for psap."""
     parser = argparse.ArgumentParser()
-    parser.add_argument("-v", "--version", action="version", version=psap.__version__)
+    # parser.add_argument("-v", "--version", action="version", version=psap.__version__)
     subparsers = parser.add_subparsers(dest="command")
     train = subparsers.add_parser("train", help="create psap training-set")
     classify = subparsers.add_parser("classify", help="predict classes")
