@@ -5,7 +5,50 @@ from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from tqdm.auto import tqdm
 import time
 from scipy import signal
+import os
+import sys
+import warnings
+import statistics
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from random import sample
+import collections
+from statistics import mean
+from tqdm.notebook import tqdm
 
+# Preprocessing
+from sklearn.preprocessing import MinMaxScaler
+
+# Sklearn imports
+from sklearn.utils import shuffle
+from sklearn.model_selection import LeaveOneOut
+from sklearn.model_selection import train_test_split
+from sklearn.impute import SimpleImputer
+
+from sklearn.metrics import *
+
+from sklearn.feature_selection import VarianceThreshold
+
+# Different machine learning models from sklearn
+from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.ensemble import GradientBoostingClassifier
+
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.datasets import make_moons, make_circles, make_classification
+from sklearn.neural_network import MLPClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.gaussian_process import GaussianProcessClassifier
+from sklearn.gaussian_process.kernels import RBF
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
+from sklearn.linear_model import SGDClassifier
+from sklearn.manifold import TSNE
+from sklearn.metrics import average_precision_score
 
 RESIDUES = [
     "A",
@@ -379,7 +422,7 @@ def preprocess_and_scaledata(data, instance):
 
 
 def preprocess_data(df, scaler):
-    instance = "llps"
+    instance = "sample8"
     info = df.select_dtypes(include=["object"])
     y = df[instance]
     X = df.drop([instance], axis=1)
@@ -469,10 +512,17 @@ def predict_proteome(
         return prediction
 
 
-def main(data, instance, ANALYSIS_NAME, second_df=pd.DataFrame(), second_df_bool=False):
+def main(
+    data,
+    instance,
+    ANALYSIS_NAME,
+    second_df=pd.DataFrame(),
+    second_df_bool=False,
+    out_dir="/Users/tilman_work",
+):
     # Make directory for output.
     try:
-        os.mkdir(os.getcwd() + f"\\analysis\\{ANALYSIS_NAME}")
+        os.mkdir(f"{out_dir}/{ANALYSIS_NAME}")
     except:
         print(
             f"Directory {ANALYSIS_NAME} already exists. Please choose another analysis name, or remove the directory {ANALYSIS_NAME}."
@@ -488,6 +538,11 @@ def main(data, instance, ANALYSIS_NAME, second_df=pd.DataFrame(), second_df_bool
     # Get Feature Importance
     # plot_feature_importance(fi_data, ANALYSIS_NAME)
     # Save prediction to .csv
-    prediction.to_csv(
-        os.getcwd() + f"/analysis/{ANALYSIS_NAME}/preidction_{ANALYSIS_NAME}.csv"
-    )
+    prediction.to_csv(f"{out_dir}/{ANALYSIS_NAME}/preidction_{ANALYSIS_NAME}.csv")
+
+
+def run_model(ANALYSIS_NAME, instance, path):
+    data = pd.read_pickle(path)
+    data = preprocess_and_scaledata(data, instance)
+    print("preprocessed and scaled dataset")
+    main(data, instance, ANALYSIS_NAME)

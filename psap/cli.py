@@ -3,6 +3,7 @@ import argparse
 import sys
 from pathlib import Path
 from .util import export_matrix
+from .psap import run_model
 import psap
 
 
@@ -12,6 +13,7 @@ def main():
     parser.add_argument("-v", "--version", action="version", version=psap.__version__)
     subparsers = parser.add_subparsers(dest="command")
     train = subparsers.add_parser("train", help="create psap training-set")
+    classify = subparsers.add_parser("classify", help="predict classes")
     train.add_argument(
         "-dbf",
         "--db_fasta",
@@ -33,10 +35,32 @@ def main():
         required=True,
         help="class column name for training-set",
     )
+    classify.add_argument(
+        "-a",
+        "--analysis",
+        default=None,
+        required=True,
+        help="analysis name",
+    )
+    classify.add_argument(
+        "-i",
+        "--instance",
+        default=None,
+        required=True,
+        help="instance name",
+    )
+    classify.add_argument(
+        "-df",
+        "--data_frame",
+        default=None,
+        required=True,
+        help="data frame with training data",
+    )
     args = parser.parse_args()
-    basename = Path(args.db_fasta).stem
+    # basename = Path(args.db_fasta).stem
     # Pickle training-set
-    export_matrix(basename, args.db_fasta, args.out, args.class_column)
+    # export_matrix(basename, args.db_fasta, args.out, args.class_column)
+    run_model(args.analysis, args.instance, args.data_frame)
 
 
 if __name__ == "__main__":
