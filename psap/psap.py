@@ -381,14 +381,13 @@ def preprocess_and_scaledata(data, instance):
     df = data.copy()
     processed_data = df.fillna(0)
     print(processed_data)
-    processed_data = preprocess_data(processed_data, scaler)
+    processed_data = preprocess_data(processed_data, scaler, instance)
     # processed_data = remove_correlating_features(processed_data, cutoff=.95)
     # processed_data = remove_low_variance_features(processed_data, variance_cutoff=0.08)
     return processed_data
 
 
-def preprocess_data(df, scaler):
-    instance = "sample8"
+def preprocess_data(df, scaler, instance):
     info = df.select_dtypes(include=["object"])
     y = df[instance]
     X = df.drop([instance], axis=1)
@@ -424,7 +423,7 @@ def get_test_train_indexes(data, label, ratio=1, randomized=False):
     return indexes
 
 
-def plot_feature_importance(fi_data, analysis_name, out_dir="/Users/tilman_work"):
+def plot_feature_importance(fi_data, analysis_name, out_dir=""):
     fi_data["mean"] = fi_data.select_dtypes([np.number]).mean(axis=1)
     fi_data = fi_data.sort_values("mean", ascending=False).reset_index(drop=True)
     fi_data[["variable", "mean"]]
@@ -501,7 +500,7 @@ def main(
     ANALYSIS_NAME,
     second_df=pd.DataFrame(),
     second_df_bool=False,
-    out_dir="/Users/tilman_work",
+    out_dir="",
 ):
     # Make directory for output.
     try:
@@ -519,13 +518,13 @@ def main(
     # if second_df_bool:
     #    predict_other_df(clf, data, second_df, ANALYSIS_NAME)
     # Get Feature Importance
-    plot_feature_importance(fi_data, ANALYSIS_NAME)
+    plot_feature_importance(fi_data, ANALYSIS_NAME, out_dir)
     # Save prediction to .csv
     prediction.to_csv(f"{out_dir}/{ANALYSIS_NAME}/preidction_{ANALYSIS_NAME}.csv")
 
 
-def run_model(ANALYSIS_NAME, instance, path):
+def run_model(ANALYSIS_NAME, instance, path, out_dir):
     data = pd.read_pickle(path)
     data = preprocess_and_scaledata(data, instance)
     print("preprocessed and scaled dataset")
-    main(data, instance, ANALYSIS_NAME)
+    main(data=data, instance=instance, ANALYSIS_NAME=ANALYSIS_NAME, out_dir=out_dir)

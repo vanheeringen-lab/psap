@@ -56,6 +56,13 @@ def main():
         required=True,
         help="data frame with training data",
     )
+    classify.add_argument(
+        "-out",
+        "--out_dir",
+        default=None,
+        required=True,
+        help="data frame with training data",
+    )
     args = parser.parse_args()
     # Pickle training-set
     if args.command == "train":
@@ -63,7 +70,7 @@ def main():
             Path(args.db_fasta).stem, args.db_fasta, args.out, args.class_column
         )
     elif args.command == "classify":
-        run_model(args.analysis, args.instance, args.data_frame)
+        run_model(args.analysis, args.instance, args.data_frame, args.out_dir)
     else:
         print("Incorrect subparser selected")
 
