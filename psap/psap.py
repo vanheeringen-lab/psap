@@ -424,6 +424,23 @@ def get_test_train_indexes(data, label, ratio=1, randomized=False):
     return indexes
 
 
+def plot_feature_importance(fi_data, analysis_name, out_dir="/Users/tilman_work"):
+    fi_data["mean"] = fi_data.select_dtypes([np.number]).mean(axis=1)
+    fi_data = fi_data.sort_values("mean", ascending=False).reset_index(drop=True)
+    fi_data[["variable", "mean"]]
+
+    # Set matplotlib parameters
+    sns.set(rc={"figure.figsize": (8, 6)})
+    plt.rcParams["pdf.fonttype"] = 42
+    plt.rcParams["ps.fonttype"] = 42
+    fi_data[0:15].plot.bar(x="variable", y="mean", rot=45, color="#CD6155")
+    plt.ylabel("Fraction of impact")
+    plt.xlabel("Feature")
+    plt.title("Mean feature importances")
+    plt.savefig(f"{out_dir}/{analysis_name}/feature_importances.pdf", transparent=True)
+    plt.show()
+
+
 def predict_proteome(
     df,
     clf,
@@ -502,7 +519,7 @@ def main(
     # if second_df_bool:
     #    predict_other_df(clf, data, second_df, ANALYSIS_NAME)
     # Get Feature Importance
-    # plot_feature_importance(fi_data, ANALYSIS_NAME)
+    plot_feature_importance(fi_data, ANALYSIS_NAME)
     # Save prediction to .csv
     prediction.to_csv(f"{out_dir}/{ANALYSIS_NAME}/preidction_{ANALYSIS_NAME}.csv")
 
