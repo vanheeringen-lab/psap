@@ -15,7 +15,7 @@ def main():
         "annotate",
         help="adds biochemical features to a set of protein sequences in fasta format and writes it to a serialized data frame",
     )
-    pp = subparsers.add_parser("classify", help="predict classes")
+    pp = subparsers.add_parser("pp", help="predict classes")
     annotate.add_argument(
         "-dbf",
         "--db_fasta",

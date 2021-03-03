@@ -151,17 +151,17 @@ def predict_proteome(
 def main(
     data,
     ccol,
-    ANALYSIS_NAME,
+    analysis_name,
     second_df=pd.DataFrame(),
     second_df_bool=False,
     out_dir="",
 ):
     # Make directory for output.
     try:
-        os.mkdir(f"{out_dir}/{ANALYSIS_NAME}")
+        os.mkdir(f"{out_dir}/{analysis_name}")
     except:
         print(
-            f"Directory {ANALYSIS_NAME} already exists. Please choose another analysis name, or remove the directory {ANALYSIS_NAME}."
+            f"Directory {analysis_name} already exists. Please choose another analysis name, or remove the directory {analysis_name}."
         )
     # Make prediction with random forest
     clf = RandomForestClassifier(max_depth=12, n_estimators=100)
@@ -175,14 +175,14 @@ def main(
     )
     # Predict second dataset
     # if second_df_bool:
-    #   predict_other_df(clf, data, second_df, ANALYSIS_NAME, out_dir)
+    #   predict_other_df(clf, data, second_df, analysis_name, out_dir)
     # Get Feature Importance
-    plot_feature_importance(fi_data, ANALYSIS_NAME, out_dir)
+    plot_feature_importance(fi_data, analysis_name, out_dir)
     # Save prediction to .csv
-    prediction.to_csv(f"{out_dir}/{ANALYSIS_NAME}/preidction_{ANALYSIS_NAME}.csv")
+    prediction.to_csv(f"{out_dir}/{analysis_name}/preidction_{analysis_name}.csv")
 
 
-def run_model(ANALYSIS_NAME, path, out_dir):
+def run_model(analysis_name, path, out_dir):
     class_col = "llps"
     data = pd.read_pickle(path)
     data = preprocess_and_scaledata(data, class_col)
@@ -194,7 +194,7 @@ def run_model(ANALYSIS_NAME, path, out_dir):
     main(
         data=data,
         ccol=class_col,
-        ANALYSIS_NAME=ANALYSIS_NAME,
+        analysis_name=analysis_name,
         out_dir=out_dir,
         second_df=second_df_scaled,
         second_df_bool=False,
