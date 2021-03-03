@@ -182,15 +182,16 @@ def main(
     prediction.to_csv(f"{out_dir}/{analysis_name}/preidction_{analysis_name}.csv")
 
 
-def run_model(analysis_name, path, out_dir):
+def run_model(analysis_name, training_path, test_path=None, out_dir="~"):
     class_col = "llps"
-    data = pd.read_pickle(path)
+    data = pd.read_pickle(training_path)
     data = preprocess_and_scaledata(data, class_col)
     print("preprocessed and scaled dataset")
-    second_df = pd.read_pickle(
-        "/Users/tilman_work/Documents/Projects/phase_separation/code/data/Dataframes/new/testset_llps_3-3-2021_ann_.pkl"
-    )
-    second_df_scaled = preprocess_and_scaledata(second_df, class_col)
+    if test_path is not None:
+        test_pkg = pd.read_pickle(test_path)
+        second_df_scaled = preprocess_and_scaledata(test_pkg, class_col)
+    else:
+        second_df_scaled = pd.DataFrame()
     main(
         data=data,
         ccol=class_col,

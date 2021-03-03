@@ -49,14 +49,21 @@ def main():
         "--out_dir",
         default=None,
         required=True,
-        help="data frame with training data",
+        help=" serialized data frame with training data",
+    )
+    pp.add_argument(
+        "-tdf",
+        "--test_df",
+        default=None,
+        required=False,
+        help="serialized data frame with test data",
     )
     args = parser.parse_args()
     # Pickle training-set
     if args.command == "annotate":
         export_matrix(Path(args.db_fasta).stem, args.db_fasta, args.out)
     elif args.command == "pp":
-        run_model(args.analysis, args.data_frame, args.out_dir)
+        run_model(args.analysis, args.data_frame, args.test_df, args.out_dir)
     else:
         print("Incorrect subparser selected")
 
