@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-from joblib import dump, load
 from random import sample
 from tqdm.notebook import tqdm
 from sklearn.preprocessing import MinMaxScaler
@@ -78,7 +77,7 @@ def plot_feature_importance(fi_data, analysis_name, out_dir=""):
     plt.ylabel("Fraction of impact")
     plt.xlabel("Feature")
     plt.title("Mean feature importances")
-    plt.savefig(f"{out_dir}/{analysis_name}/feature_importances.pdf", transparent=True)
+    plt.savefig(f"{out_dir}/feature_importances.pdf", transparent=True)
     plt.show()
 
 
@@ -91,7 +90,7 @@ def predict_other_df(clf, processed_data, second_df, analysis_name, out_dir):
         # remove_training=True,
         second_df=second_df,
     )
-    prediction.to_csv(f"{out_dir}/{analysis_name}/full_prediction.csv")
+    prediction.to_csv(f"{out_dir}/full_prediction.csv")
 
 
 def predict_proteome(
@@ -158,7 +157,7 @@ def main(
 ):
     # Make directory for output.
     try:
-        os.mkdir(f"{out_dir}/{analysis_name}")
+        os.mkdir(f"{out_dir}")
     except:
         print(
             f"Directory {analysis_name} already exists. Please choose another analysis name, or remove the directory {analysis_name}."
@@ -173,13 +172,10 @@ def main(
         remove_training=False,
         second_df=second_df,
     )
-    # Predict second dataset
-    # if second_df_bool:
-    #   predict_other_df(clf, data, second_df, analysis_name, out_dir)
     # Get Feature Importance
     plot_feature_importance(fi_data, analysis_name, out_dir)
     # Save prediction to .csv
-    prediction.to_csv(f"{out_dir}/{analysis_name}/preidction_{analysis_name}.csv")
+    prediction.to_csv(f"{out_dir}/preidction_{analysis_name}.csv")
 
 
 def run_model(analysis_name, training_path, test_path=None, out_dir="~"):

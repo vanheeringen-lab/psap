@@ -31,13 +31,6 @@ def main():
         help="Output directory for serialized training-set",
     )
     pp.add_argument(
-        "-a",
-        "--analysis",
-        default=None,
-        required=True,
-        help="analysis name",
-    )
-    pp.add_argument(
         "-df",
         "--data_frame",
         default=None,
@@ -63,7 +56,7 @@ def main():
     if args.command == "annotate":
         export_matrix(Path(args.db_fasta).stem, args.db_fasta, args.out)
     elif args.command == "pp":
-        run_model(args.analysis, args.data_frame, args.test_df, args.out_dir)
+        run_model(Path(args.out_dir).stem, args.data_frame, args.test_df, args.out_dir)
     else:
         print("Incorrect subparser selected")
 
