@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+from joblib import dump, load
 from random import sample
 from tqdm.notebook import tqdm
 from sklearn.preprocessing import MinMaxScaler
@@ -10,21 +11,18 @@ from sklearn.ensemble import RandomForestClassifier
 
 
 def preprocess_and_scaledata(data, instance):
-    # try:
-    #    data = data.drop(['iupred', 'HydroPhobicIndex', 'uniprot_id', 'PRDaa'], axis=1)
-    # except KeyError:
-    #    data = data.drop(['iupred', 'HydroPhobicIndex', 'uniprot_id'], axis=1)
+    try:
+        data = data.drop(["uniprot_id", "PRDaa"], axis=1)
+    except KeyError:
+        data = data.drop(["uniprot_id"], axis=1)
     data = data.fillna(value=0)
-    print(data.shape)
     print(
         "Number of phase separating proteins in dataset: "
         + str(data.loc[data[instance] == 1].shape[0])
     )
-    print(data.shape)
     scaler = MinMaxScaler()
     df = data.copy()
     processed_data = df.fillna(0)
-    print(processed_data)
     processed_data = preprocess_data(processed_data, scaler, instance)
     # processed_data = remove_correlating_features(processed_data, cutoff=.95)
     # processed_data = remove_low_variance_features(processed_data, variance_cutoff=0.08)
@@ -99,7 +97,7 @@ def predict_other_df(clf, processed_data, second_df, analysis_name, out_dir):
 def predict_proteome(
     df,
     clf,
-    instance,
+    ccol,
     testing_size,
     feature_imp=True,
     remove_training=False,
@@ -111,14 +109,14 @@ def predict_proteome(
     if len(second_df) > 0:
         prediction = second_df.select_dtypes(include="object")
         second_df = second_df.select_dtypes([np.number])
-    indexes = get_test_train_indexes(df, instance)
+    indexes = get_test_train_indexes(df, ccol)
     count = 0
     fi_data = None
     for index in tqdm(indexes):
         df_fraction = df.loc[index]
         # Also consider X_test index for prediction in the proteome
-        X = df_fraction.drop(instance, axis=1)
-        y = df_fraction[instance]
+        X = df_fraction.drop(ccol, axis=1)
+        y = df_fraction[ccol]
         clf.fit(X, y)
         # Feature importance
         if feature_imp:
@@ -134,10 +132,10 @@ def predict_proteome(
                 fi_data = pd.merge(fi_data, fi, on="variable")
         # Make prediction
         if len(second_df) > 0:
-            probability = clf.predict_proba(second_df.drop(instance, axis=1))[:, 1]
+            probability = clf.predict_proba(second_df.drop(ccol, axis=1))[:, 1]
             prediction["probability_" + str(count)] = probability
         else:
-            probability = clf.predict_proba(df.drop(instance, axis=1))[:, 1]
+            probability = clf.predict_proba(df.drop(ccol, axis=1))[:, 1]
             prediction["probability_" + str(count)] = probability
         # Removing prediction that were used in the train test set.
         if remove_training:
@@ -152,7 +150,7 @@ def predict_proteome(
 
 def main(
     data,
-    instance,
+    ccol,
     ANALYSIS_NAME,
     second_df=pd.DataFrame(),
     second_df_bool=False,
@@ -168,19 +166,36 @@ def main(
     # Make prediction with random forest
     clf = RandomForestClassifier(max_depth=12, n_estimators=100)
     prediction, fi_data = predict_proteome(
-        data, clf, instance=instance, testing_size=0.2, remove_training=False
+        df=data,
+        clf=clf,
+        ccol=ccol,
+        testing_size=0.2,
+        remove_training=False,
+        second_df=second_df,
     )
     # Predict second dataset
-    if second_df_bool:
-        predict_other_df(clf, data, second_df, ANALYSIS_NAME, out_dir)
+    # if second_df_bool:
+    #   predict_other_df(clf, data, second_df, ANALYSIS_NAME, out_dir)
     # Get Feature Importance
     plot_feature_importance(fi_data, ANALYSIS_NAME, out_dir)
     # Save prediction to .csv
     prediction.to_csv(f"{out_dir}/{ANALYSIS_NAME}/preidction_{ANALYSIS_NAME}.csv")
 
 
-def run_model(ANALYSIS_NAME, instance, path, out_dir):
+def run_model(ANALYSIS_NAME, path, out_dir):
+    class_col = "llps"
     data = pd.read_pickle(path)
-    data = preprocess_and_scaledata(data, instance)
+    data = preprocess_and_scaledata(data, class_col)
     print("preprocessed and scaled dataset")
-    main(data=data, instance=instance, ANALYSIS_NAME=ANALYSIS_NAME, out_dir=out_dir)
+    second_df = pd.read_pickle(
+        "/Users/tilman_work/Documents/Projects/phase_separation/code/data/Dataframes/new/testset_llps_3-3-2021_ann_.pkl"
+    )
+    second_df_scaled = preprocess_and_scaledata(second_df, class_col)
+    main(
+        data=data,
+        ccol=class_col,
+        ANALYSIS_NAME=ANALYSIS_NAME,
+        out_dir=out_dir,
+        second_df=second_df_scaled,
+        second_df_bool=False,
+    )
