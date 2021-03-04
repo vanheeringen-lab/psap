@@ -7,13 +7,14 @@ from random import sample
 from tqdm.notebook import tqdm
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.ensemble import RandomForestClassifier
+from joblib import dump, load
 
 
 def preprocess_and_scaledata(data, instance):
-    try:
-        data = data.drop(["uniprot_id", "PRDaa"], axis=1)
-    except KeyError:
-        data = data.drop(["uniprot_id"], axis=1)
+    # try:
+    #    data = data.drop(["uniprot_id", "PRDaa"], axis=1)
+    # except KeyError:
+    #    data = data.drop(["uniprot_id"], axis=1)
     data = data.fillna(value=0)
     print(
         "Number of phase separating proteins in dataset: "
@@ -147,52 +148,61 @@ def predict_proteome(
         return prediction
 
 
-def main(
-    data,
-    ccol,
-    analysis_name,
-    second_df=pd.DataFrame(),
-    second_df_bool=False,
-    out_dir="",
-):
+def train_model(training_data, prefix="", out_dir=""):
     # Make directory for output.
     try:
         os.mkdir(f"{out_dir}")
     except:
         print(
-            f"Directory {analysis_name} already exists. Please choose another analysis name, or remove the directory {analysis_name}."
+            f"Directory {prefix} already exists. Please choose another analysis name, or remove the directory {prefix}."
         )
-    # Make prediction with random forest
-    clf = RandomForestClassifier(max_depth=12, n_estimators=100)
-    prediction, fi_data = predict_proteome(
-        df=data,
-        clf=clf,
-        ccol=ccol,
-        testing_size=0.2,
-        remove_training=False,
-        second_df=second_df,
+    data = pd.read_pickle(training_data)
+    data_ps = preprocess_and_scaledata(data, "llps")
+    data_numeric = data_ps.select_dtypes([np.number])
+    X = data_numeric.drop("llps", axis=1)
+    y = data_numeric["llps"]
+    clf = RandomForestClassifier(
+        n_jobs=32,
+        class_weight="balanced",
+        n_estimators=1200,
+        criterion="entropy",
+        random_state=42,
     )
-    # Get Feature Importance
-    plot_feature_importance(fi_data, analysis_name, out_dir)
-    # Save prediction to .csv
-    prediction.to_csv(f"{out_dir}/preidction_{analysis_name}.csv")
+    clf.fit(X, y)
+    psap_prediction = pd.DataFrame(index=data["protein_name"])
+    psap_prediction["PSAP_score"] = clf.predict_proba(X)[:, 1]
+    psap_prediction["llps"] = y.values
+    psap_prediction["rank"] = 0
+    rank = psap_prediction.loc[psap_prediction["llps"] == 0, "PSAP_score"].rank(
+        ascending=False
+    )
+    psap_prediction["rank"] = rank
+    # Serialize trained model
+    dump(clf, f"{out_dir}/psap_prediction_{prefix}.joblid")
+    psap_prediction.to_csv(f"{out_dir}/prediction_{prefix}.csv")
 
 
-def run_model(analysis_name, training_path, test_path=None, out_dir="~"):
-    class_col = "llps"
-    data = pd.read_pickle(training_path)
-    data = preprocess_and_scaledata(data, class_col)
-    print("preprocessed and scaled dataset")
-    if test_path is not None:
-        test_pkg = pd.read_pickle(test_path)
-        second_df_scaled = preprocess_and_scaledata(test_pkg, class_col)
-    else:
-        second_df_scaled = pd.DataFrame()
-    main(
-        data=data,
-        ccol=class_col,
-        analysis_name=analysis_name,
-        out_dir=out_dir,
-        second_df=second_df_scaled,
-        second_df_bool=False,
+def psap_predict(test_data, model, prefix="", out_dir=""):
+    clf = load(model)
+    data = pd.read_pickle(test_data)
+    print(data)
+    # Make directory for output.
+    try:
+        os.mkdir(f"{out_dir}")
+    except:
+        print(
+            f"Directory {prefix} already exists. Please choose another analysis name, or remove the directory {prefix}."
+        )
+    data_ps = preprocess_and_scaledata(data, "llps")
+    data_numeric = data_ps.select_dtypes([np.number])
+    X = data_numeric.drop("llps", axis=1)
+    y = data_numeric["llps"]
+    psap_prediction = pd.DataFrame(index=data["protein_name"])
+    psap_prediction["PSAP_score"] = clf.predict_proba(X)[:, 1]
+    psap_prediction["llps"] = y.values
+    psap_prediction["rank"] = 0
+    rank = psap_prediction.loc[psap_prediction["llps"] == 0, "PSAP_score"].rank(
+        ascending=False
     )
+    psap_prediction["rank"] = rank
+    psap_prediction.to_csv(f"{out_dir}/prediction_{prefix}.csv")

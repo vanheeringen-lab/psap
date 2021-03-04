@@ -3,7 +3,7 @@ import argparse
 import sys
 from pathlib import Path
 from psap.util import export_matrix
-from psap.classifier import run_model
+from psap.classifier import train_model, psap_predict
 
 
 def main():
@@ -15,6 +15,7 @@ def main():
         "annotate",
         help="adds biochemical features to a set of protein sequences in fasta format and writes it to a serialized data frame",
     )
+    train = subparsers.add_parser("train", help="train psap model")
     pp = subparsers.add_parser("pp", help="predict classes")
     annotate.add_argument(
         "-dbf",
@@ -30,6 +31,20 @@ def main():
         required=False,
         help="Output directory for serialized training-set",
     )
+    train.add_argument(
+        "-df",
+        "--data_frame",
+        default=None,
+        required=True,
+        help="annotated training set",
+    )
+    train.add_argument(
+        "-out",
+        "--out_dir",
+        default=None,
+        required=True,
+        help="output directory for trained model",
+    )
     pp.add_argument(
         "-df",
         "--data_frame",
@@ -38,25 +53,38 @@ def main():
         help="data frame with training data",
     )
     pp.add_argument(
+        "-m",
+        "--model",
+        default=None,
+        required=True,
+        help="trained psap model",
+    )
+    pp.add_argument(
         "-out",
         "--out_dir",
         default=None,
         required=True,
         help=" serialized data frame with training data",
     )
-    pp.add_argument(
-        "-tdf",
-        "--test_df",
-        default=None,
-        required=False,
-        help="serialized data frame with test data",
-    )
     args = parser.parse_args()
     # Pickle training-set
     if args.command == "annotate":
-        export_matrix(Path(args.db_fasta).stem, args.db_fasta, args.out)
+        export_matrix(
+            name=Path(args.db_fasta).stem, fasta_path=args.db_fasta, out_path=args.out
+        )
+    if args.command == "train":
+        train_model(
+            training_data=args.data_frame,
+            prefix=Path(args.out_dir).stem,
+            out_dir=args.out_dir,
+        )
     elif args.command == "pp":
-        run_model(Path(args.out_dir).stem, args.data_frame, args.test_df, args.out_dir)
+        psap_predict(
+            test_data=args.data_frame,
+            model=args.model,
+            prefix=Path(args.out_dir).stem,
+            out_dir=args.out_dir,
+        )
     else:
         print("Incorrect subparser selected")
 
