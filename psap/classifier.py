@@ -169,23 +169,13 @@ def train_model(training_data, prefix="", out_dir=""):
         random_state=42,
     )
     clf.fit(X, y)
-    psap_prediction = pd.DataFrame(index=data["protein_name"])
-    psap_prediction["PSAP_score"] = clf.predict_proba(X)[:, 1]
-    psap_prediction["llps"] = y.values
-    psap_prediction["rank"] = 0
-    rank = psap_prediction.loc[psap_prediction["llps"] == 0, "PSAP_score"].rank(
-        ascending=False
-    )
-    psap_prediction["rank"] = rank
     # Serialize trained model
     dump(clf, f"{out_dir}/psap_prediction_{prefix}.joblid")
-    psap_prediction.to_csv(f"{out_dir}/prediction_{prefix}.csv")
 
 
 def psap_predict(test_data, model, prefix="", out_dir=""):
     clf = load(model)
     data = pd.read_pickle(test_data)
-    print(data)
     # Make directory for output.
     try:
         os.mkdir(f"{out_dir}")
