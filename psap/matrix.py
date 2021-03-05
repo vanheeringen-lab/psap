@@ -57,6 +57,17 @@ HP = {
 
 
 class MakeMatrix:
+    """
+    Creates a pandas data frame with biochemical features
+    for a set of peptide sequences in fasta format.
+    ----------
+    dbfasta : str
+        Path to fasta with peptide sequences.
+    Returns
+    -------
+    Pandas data frame object
+    """
+
     def __init__(self, dbfasta):
         self.df = pd.DataFrame()
         self.dbfasta = dbfasta
@@ -77,6 +88,12 @@ class MakeMatrix:
             print(str(round(end - start, 2)) + "s " + e)
 
     def fasta2df(self):
+        """
+        Read sequences and attributes from fasta file and convert to data frame
+        Returns
+        -------
+        Pandas data frame object
+        """
         rows = list()
         with open(self.dbfasta) as f:
             for record in SeqIO.parse(self.dbfasta, "fasta"):
@@ -97,12 +114,10 @@ class MakeMatrix:
                     rows.append([name, uniprot_id, seq])
         self.df = pd.DataFrame(rows, columns=["protein_name", "uniprot_id", "sequence"])
 
-    def hydrophobic(self):
-        for index, row in self.df.iterrows():
-            hpilst = pd.Series(list(row["sequence"])).map(HP).tolist()
-            self.df.loc[index, "HydroPhobicIndex"] = HydroPhobicIndex(hpilst)
-
     def amino_acid_analysis(self):
+        """
+        Adds fraction of amino acid residues (defined in RESIDUES) to data frame
+        """
         for res in RESIDUES:
             self.df["fraction_" + res] = (
                 self.df["sequence"].str.count(res) / self.df["sequence"].str.len()
@@ -119,26 +134,10 @@ class MakeMatrix:
             if "U" not in seq and "X" not in seq and "B" not in seq:
                 self.df.loc[index, "gravy"] = seqanalysis.gravy()
 
-    def add_iupred_features(self):
-        for index, row in tqdm(self.df.iterrows(), total=self.df.shape[0]):
-            # for index, row in self.df.iterrows():
-            idr = row["iupred"].glob[0]
-            self.df.loc[index, "idr_percetage"] = sum(i > 0.5 for i in list(idr))
-            self.df.loc[index, "idr_50"] = sum(i > 0.5 for i in list(idr)) / len(
-                str(row["sequence"])
-            )
-            self.df.loc[index, "idr_60"] = sum(i > 0.6 for i in list(idr)) / len(
-                str(row["sequence"])
-            )
-            self.df.loc[index, "idr_70"] = sum(i > 0.7 for i in list(idr)) / len(
-                str(row["sequence"])
-            )
-            self.df.loc[index, "idr_80"] = sum(i > 0.8 for i in list(idr)) / len(
-                str(row["sequence"])
-            )
-            self.df.loc[index, "idr_90"] = sum(i > 0.9 for i in list(idr)) / len(
-                str(row["sequence"])
-            )
+    def hydrophobic(self):
+        for index, row in self.df.iterrows():
+            hpilst = pd.Series(list(row["sequence"])).map(HP).tolist()
+            self.df.loc[index, "HydroPhobicIndex"] = HydroPhobicIndex(hpilst)
 
     @staticmethod
     def convolve_signal(sig, window=25):
@@ -147,6 +146,9 @@ class MakeMatrix:
         return sig
 
     def add_hydrophobic_features(self):
+         """
+         Adds hydrophobic features to petide data frame
+         """
         hpi0, hpi1, hpi2, hpi3, hpi4, hpi5 = (
             list(),
             list(),
@@ -178,6 +180,9 @@ class MakeMatrix:
         self.df["hpi_<-2.5"] = hpi5
 
     def add_biochemical_combinations(self):
+        """
+        Adds biochemical combinations of amino acid residues to data frame.
+        """
         df = self.df
         df = df.assign(Asx=df["fraction_D"] + df["fraction_N"])
         df = df.assign(Glx=df["fraction_E"] + df["fraction_Q"])
@@ -276,6 +281,9 @@ class MakeMatrix:
         del df
 
     def add_lowcomplexityscore(self):
+        """
+        Add lowcomplexity score to data frame
+        """
         lcs_window = 20
         lcs_cutoff = 7
         for index, row in self.df.iterrows():
@@ -292,6 +300,9 @@ class MakeMatrix:
                 self.df.loc[index, "lcs_fraction"] = score / len(sig)
 
     def add_lowcomplexity_features(self):
+        """
+        Adds lowcomplexity features to data frame
+        """
         n_window = 20
         cutoff = 7
         n_halfwindow = int(n_window / 2)
