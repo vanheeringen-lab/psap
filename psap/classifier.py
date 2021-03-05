@@ -10,42 +10,60 @@ from sklearn.ensemble import RandomForestClassifier
 from joblib import dump, load
 
 
-def preprocess_and_scaledata(data, instance):
-    # try:
-    #    data = data.drop(["uniprot_id", "PRDaa"], axis=1)
-    # except KeyError:
-    #    data = data.drop(["uniprot_id"], axis=1)
+def preprocess_and_scaledata(data, class):
+    """
+    Wrapper for preprocess_data. Performs Min/Max scaling and centering of a dataset.
+    ----------
+    data : pandas DataFrame
+            DataFrame with train/test instances
+    Returns
+    -------
+    processed_data: Pandas DataFrame
+                    Scaled and centered data
+    """
+    try:
+        data = data.drop(["uniprot_id", "PRDaa"], axis=1)
+    except KeyError:
+        data = data.drop(["uniprot_id"], axis=1)
     data = data.fillna(value=0)
     print(
         "Number of phase separating proteins in dataset: "
-        + str(data.loc[data[instance] == 1].shape[0])
+        + str(data.loc[data[class] == 1].shape[0])
     )
     scaler = MinMaxScaler()
     df = data.copy()
     processed_data = df.fillna(0)
-    processed_data = preprocess_data(processed_data, scaler, instance)
+    processed_data = preprocess_data(processed_data, scaler, class)
     # processed_data = remove_correlating_features(processed_data, cutoff=.95)
     # processed_data = remove_low_variance_features(processed_data, variance_cutoff=0.08)
     return processed_data
 
 
-def preprocess_data(df, scaler, instance):
+def preprocess_data(df, scaler, class):
     info = df.select_dtypes(include=["object"])
-    y = df[instance]
-    X = df.drop([instance], axis=1)
+    y = df[class]
+    X = df.drop([class], axis=1)
     X = X._get_numeric_data()
     columns = X.columns
     X = scaler.fit_transform(X)
     X = pd.DataFrame(X, columns=columns)
-    X[instance] = y
+    X[class] = y
     X = X.merge(info, how="outer", left_index=True, right_index=True)
     return X
 
 
 def get_test_train_indexes(data, label, ratio=1, randomized=False):
     """
-    Function: Will oversample the positive data with randomly selected negative samples.
-    Returns: List with indexes which contain positive and negative samples.
+    Oversample the positive data with randomly selected negative samples.
+    data: pandas DataFrame object
+          training instances
+    label: str
+           class column name
+    ratio: int
+            ratio to oversample positive (1) class
+    Returns
+    -------
+    List with indexes which contain positive and negative samples.
     """
     positive_instances = set(data.loc[data[label] == 1].index)
     negative_instances = set(data.loc[data[label] == 0].index)
@@ -66,6 +84,9 @@ def get_test_train_indexes(data, label, ratio=1, randomized=False):
 
 
 def plot_feature_importance(fi_data, analysis_name, out_dir=""):
+    """
+    Plot feature importance
+    """
     fi_data["mean"] = fi_data.select_dtypes([np.number]).mean(axis=1)
     fi_data = fi_data.sort_values("mean", ascending=False).reset_index(drop=True)
     fi_data[["variable", "mean"]]
@@ -85,12 +106,24 @@ def plot_feature_importance(fi_data, analysis_name, out_dir=""):
 def predict_proteome(
     df,
     clf,
-    ccol,
-    testing_size,
     feature_imp=True,
     remove_training=False,
     second_df=pd.DataFrame(),
 ):
+    """
+    Performs cross-validation on a given training set
+    ----------
+    df : Pandas DataFrame
+        training instances
+    clf: sklearn classifier
+        sklearn RandomForest classifier
+    feature_im: bool
+         plot feature importance to pdf
+    Returns
+    -------
+    prediction: pandas DataFrame
+                Predicted class propabilities llps class (1)
+    """
     pd.set_option("mode.chained_assignment", None)
     prediction = df.select_dtypes(include="object")
     df = df.select_dtypes([np.number])
@@ -138,6 +171,16 @@ def predict_proteome(
 
 
 def eval_model(path, prefix, out_dir=""):
+    """
+    Wrapper for predict_proteome.
+    ----
+    path: str
+        Path to serialized/pickeld data frame
+    prefix:
+        prefix for .csv file with prediction results
+    out_dir:
+        path to create output folder.
+    """
     data = pd.read_pickle(path)
     data_ps = preprocess_and_scaledata(data, "llps")
     clf = RandomForestClassifier(max_depth=12, n_estimators=100)
@@ -157,15 +200,23 @@ def eval_model(path, prefix, out_dir=""):
     prediction.to_csv(f"{out_dir}/prediction_{prefix}.csv")
 
 
-def train_model(training_data, prefix="", out_dir=""):
-    # Make directory for output.
+def train_model(path, prefix="", out_dir=""):
+    """
+    ----
+    path: str
+        Path to serialized/pickeld training set
+    prefix:
+        prefix for .csv file with prediction results and serialized model
+    out_dir:
+        path to create output folder.
+    """
     try:
         os.mkdir(f"{out_dir}")
     except:
         print(
             f"Directory {prefix} already exists. Please choose another analysis name, or remove the directory {prefix}."
         )
-    data = pd.read_pickle(training_data)
+    data = pd.read_pickle(path)
     data_ps = preprocess_and_scaledata(data, "llps")
     data_numeric = data_ps.select_dtypes([np.number])
     X = data_numeric.drop("llps", axis=1)
@@ -178,23 +229,22 @@ def train_model(training_data, prefix="", out_dir=""):
         random_state=42,
     )
     clf.fit(X, y)
-    # Perform cross validation
-    prediction, fi_data = predict_proteome(
-        df=data_ps,
-        clf=clf,
-        ccol="llps",
-        testing_size=0.2,
-        remove_training=False,
-        second_df=pd.DataFrame(),
-    )
-    plot_feature_importance(fi_data, prefix, out_dir)
-    # Save prediction to .csv
-    prediction.to_csv(f"{out_dir}/prediction_{prefix}.csv")
     # Serialize trained model
     dump(clf, f"{out_dir}/psap_model_{prefix}.joblid")
 
 
-def psap_predict(test_data, model, prefix="", out_dir=""):
+def psap_predict(path, model, prefix="", out_dir=""):
+    """
+    ----
+    path: str
+        Path to serialized/pickeld training set
+    model: sklearn model
+        Path to serialized RandomForest classifier (trained)
+    prefix:
+        prefix for .csv file with prediction results and serialized model
+    out_dir:
+        path to create output folder.
+    """
     clf = load(model)
     data = pd.read_pickle(test_data)
     # Make directory for output.

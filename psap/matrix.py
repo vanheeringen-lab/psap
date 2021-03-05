@@ -63,9 +63,6 @@ class MakeMatrix:
     ----------
     dbfasta : str
         Path to fasta with peptide sequences.
-    Returns
-    -------
-    Pandas data frame object
     """
 
     def __init__(self, dbfasta):
@@ -89,10 +86,7 @@ class MakeMatrix:
 
     def fasta2df(self):
         """
-        Read sequences and attributes from fasta file and convert to data frame
-        Returns
-        -------
-        Pandas data frame object
+        Read peptide sequences and attributes from fasta file and convert to Pandas DataFrame.
         """
         rows = list()
         with open(self.dbfasta) as f:
@@ -116,7 +110,7 @@ class MakeMatrix:
 
     def amino_acid_analysis(self):
         """
-        Adds fraction of amino acid residues (defined in RESIDUES) to data frame
+        Adds fraction of amino acid residues (defined in RESIDUES) to data frame.
         """
         for res in RESIDUES:
             self.df["fraction_" + res] = (
@@ -282,7 +276,7 @@ class MakeMatrix:
 
     def add_lowcomplexityscore(self):
         """
-        Add lowcomplexity score to data frame
+        Add lowcomplexity score to data frame.
         """
         lcs_window = 20
         lcs_cutoff = 7
@@ -301,7 +295,7 @@ class MakeMatrix:
 
     def add_lowcomplexity_features(self):
         """
-        Adds lowcomplexity features to data frame
+        Adds lowcomplexity features to data frame.
         """
         n_window = 20
         cutoff = 7
