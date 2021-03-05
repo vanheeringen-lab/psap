@@ -5,41 +5,41 @@
 from setuptools import setup, find_packages
 import versioneer
 
-with open('README.rst') as readme_file:
+with open("README.rst") as readme_file:
     readme = readme_file.read()
 
-with open('requirements.txt') as f:
+with open("requirements.txt") as f:
     requirements = f.read().splitlines()
 
 
 setup(
     author="Tilman Schaefers",
-    author_email='tilman.schaefers@ru.nl',
-    python_requires='>=3.6',
+    author_email="tilman.schaefers@ru.nl",
+    python_requires=">=3.7",
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
-        'Natural Language :: English',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
+        "Development Status :: 2 - Pre-Alpha",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: MIT License",
+        "Natural Language :: English",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
     ],
     description="CLI interface for the PSAP classifier, Mierlo, G. van. Predicting protein condensate formation using machine learning (Manuscript in Preparation).",
     entry_points={
-        'console_scripts': [
-            'psap=psap.cli:main',
+        "console_scripts": [
+            "psap=psap.cli:main",
         ],
     },
     license="MIT license",
     long_description=readme,
-    keywords='psap',
-    name='psap',
+    keywords="psap",
+    name="psap",
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
-    packages=find_packages(include=['psap', 'psap.*']),
+    packages=find_packages(include=["psap", "psap.*"]),
     install_requires=requirements,
-    url='https://github.com/tilschaef/psap'
+    url="https://github.com/tilschaef/psap",
 )
