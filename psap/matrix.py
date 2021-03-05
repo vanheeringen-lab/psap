@@ -140,9 +140,6 @@ class MakeMatrix:
         return sig
 
     def add_hydrophobic_features(self):
-         """
-         Adds hydrophobic features to petide data frame
-         """
         hpi0, hpi1, hpi2, hpi3, hpi4, hpi5 = (
             list(),
             list(),

@@ -10,7 +10,7 @@ from sklearn.ensemble import RandomForestClassifier
 from joblib import dump, load
 
 
-def preprocess_and_scaledata(data, class):
+def preprocess_and_scaledata(data, ccol):
     """
     Wrapper for preprocess_data. Performs Min/Max scaling and centering of a dataset.
     ----------
@@ -28,26 +28,26 @@ def preprocess_and_scaledata(data, class):
     data = data.fillna(value=0)
     print(
         "Number of phase separating proteins in dataset: "
-        + str(data.loc[data[class] == 1].shape[0])
+        + str(data.loc[data[ccol] == 1].shape[0])
     )
     scaler = MinMaxScaler()
     df = data.copy()
     processed_data = df.fillna(0)
-    processed_data = preprocess_data(processed_data, scaler, class)
+    processed_data = preprocess_data(processed_data, scaler, ccol)
     # processed_data = remove_correlating_features(processed_data, cutoff=.95)
     # processed_data = remove_low_variance_features(processed_data, variance_cutoff=0.08)
     return processed_data
 
 
-def preprocess_data(df, scaler, class):
+def preprocess_data(df, scaler, ccol):
     info = df.select_dtypes(include=["object"])
-    y = df[class]
-    X = df.drop([class], axis=1)
+    y = df[ccol]
+    X = df.drop([ccol], axis=1)
     X = X._get_numeric_data()
     columns = X.columns
     X = scaler.fit_transform(X)
     X = pd.DataFrame(X, columns=columns)
-    X[class] = y
+    X[ccol] = y
     X = X.merge(info, how="outer", left_index=True, right_index=True)
     return X
 
@@ -246,7 +246,7 @@ def psap_predict(path, model, prefix="", out_dir=""):
         path to create output folder.
     """
     clf = load(model)
-    data = pd.read_pickle(test_data)
+    data = pd.read_pickle(path)
     # Make directory for output.
     try:
         os.mkdir(f"{out_dir}")

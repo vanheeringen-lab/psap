@@ -40,8 +40,8 @@ def main():
         help="Path to annotated and serialized data frame (output from annotate command)",
     )
     train.add_argument(
-        "-out",
-        "--out_dir",
+        "-o",
+        "--out",
         default=None,
         required=True,
         help="Output directory for trained and serialized RandomForest classifier",
@@ -62,7 +62,7 @@ def main():
     )
     predict.add_argument(
         "-o",
-        "--out_dir",
+        "--out",
         default=None,
         required=True,
         help="Output directory for prediction results",
@@ -75,8 +75,8 @@ def main():
         help="Path to annotated and serialized data frame (output from annotate command)",
     )
     cval.add_argument(
-        "-out",
-        "--out_dir",
+        "-o",
+        "--out",
         default=None,
         required=True,
         help="Output directory for prediction results",
@@ -85,26 +85,26 @@ def main():
     # Pickle training-set
     if args.command == "annotate":
         export_matrix(
-            name=Path(args.db_fasta).stem, fasta_path=args.db_fasta, out_path=args.out
+            name=Path(args.fasta).stem, fasta_path=args.fasta, out_path=args.out
         )
-    if args.command == "train":
+    elif args.command == "train":
         train_model(
-            training_data=args.data_frame,
-            prefix=Path(args.out_dir).stem,
-            out_dir=args.out_dir,
+            path=args.data_frame,
+            prefix=Path(args.out).stem,
+            out_dir=args.out,
         )
     elif args.command == "predict":
         psap_predict(
-            test_data=args.data_frame,
+            path=args.data_frame,
             model=args.model,
-            prefix=Path(args.out_dir).stem,
-            out_dir=args.out_dir,
+            prefix=Path(args.out).stem,
+            out_dir=args.out,
         )
     elif args.command == "cval":
         eval_model(
             path=args.data_frame,
-            prefix=Path(args.out_dir).stem,
-            out_dir=args.out_dir,
+            prefix=Path(args.out).stem,
+            out_dir=args.out,
         )
     else:
         print("Incorrect subparser selected")
