@@ -3,7 +3,7 @@ import argparse
 import sys
 from pathlib import Path
 from psap.util import export_matrix
-from psap.classifier import train_model, psap_predict
+from psap.classifier import train_model, psap_predict, eval_model
 
 
 def main():
@@ -17,6 +17,7 @@ def main():
     )
     train = subparsers.add_parser("train", help="train psap model")
     pp = subparsers.add_parser("pp", help="predict classes")
+    cv = subparsers.add_parser("cv", help="evaluate model using cross validation")
     annotate.add_argument(
         "-dbf",
         "--db_fasta",
@@ -66,6 +67,20 @@ def main():
         required=True,
         help=" serialized data frame with training data",
     )
+    cv.add_argument(
+        "-df",
+        "--data_frame",
+        default=None,
+        required=True,
+        help="data frame with training data",
+    )
+    cv.add_argument(
+        "-out",
+        "--out_dir",
+        default=None,
+        required=True,
+        help=" serialized data frame with training data",
+    )
     args = parser.parse_args()
     # Pickle training-set
     if args.command == "annotate":
@@ -82,6 +97,12 @@ def main():
         psap_predict(
             test_data=args.data_frame,
             model=args.model,
+            prefix=Path(args.out_dir).stem,
+            out_dir=args.out_dir,
+        )
+    elif args.command == "cv":
+        eval_model(
+            path=args.data_frame,
             prefix=Path(args.out_dir).stem,
             out_dir=args.out_dir,
         )

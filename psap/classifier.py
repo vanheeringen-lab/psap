@@ -82,18 +82,6 @@ def plot_feature_importance(fi_data, analysis_name, out_dir=""):
     plt.show()
 
 
-def predict_other_df(clf, processed_data, second_df, analysis_name, out_dir):
-    prediction, fi_data = predict_proteome(
-        processed_data,
-        clf,
-        instance="llps",
-        testing_size=0.2,
-        # remove_training=True,
-        second_df=second_df,
-    )
-    prediction.to_csv(f"{out_dir}/full_prediction.csv")
-
-
 def predict_proteome(
     df,
     clf,
@@ -106,6 +94,7 @@ def predict_proteome(
     pd.set_option("mode.chained_assignment", None)
     prediction = df.select_dtypes(include="object")
     df = df.select_dtypes([np.number])
+    ccol = "llps"
     if len(second_df) > 0:
         prediction = second_df.select_dtypes(include="object")
         second_df = second_df.select_dtypes([np.number])
@@ -148,6 +137,26 @@ def predict_proteome(
         return prediction
 
 
+def eval_model(path, prefix, out_dir=""):
+    data = pd.read_pickle(path)
+    data_ps = preprocess_and_scaledata(data, "llps")
+    clf = RandomForestClassifier(max_depth=12, n_estimators=100)
+    prediction, fi_data = predict_proteome(
+        data_ps, clf, "llps", testing_size=0.2, remove_training=False
+    )
+    # Create output directory
+    try:
+        os.mkdir(f"{out_dir}")
+    except:
+        print(
+            f"Directory {prefix} already exists. Please choose another analysis name, or remove the directory {prefix}."
+        )
+    # Get Feature Importance
+    plot_feature_importance(fi_data, prefix, out_dir)
+    # Save prediction to .csv
+    prediction.to_csv(f"{out_dir}/prediction_{prefix}.csv")
+
+
 def train_model(training_data, prefix="", out_dir=""):
     # Make directory for output.
     try:
@@ -169,8 +178,20 @@ def train_model(training_data, prefix="", out_dir=""):
         random_state=42,
     )
     clf.fit(X, y)
+    # Perform cross validation
+    prediction, fi_data = predict_proteome(
+        df=data_ps,
+        clf=clf,
+        ccol="llps",
+        testing_size=0.2,
+        remove_training=False,
+        second_df=pd.DataFrame(),
+    )
+    plot_feature_importance(fi_data, prefix, out_dir)
+    # Save prediction to .csv
+    prediction.to_csv(f"{out_dir}/prediction_{prefix}.csv")
     # Serialize trained model
-    dump(clf, f"{out_dir}/psap_prediction_{prefix}.joblid")
+    dump(clf, f"{out_dir}/psap_model_{prefix}.joblid")
 
 
 def psap_predict(test_data, model, prefix="", out_dir=""):

@@ -2,7 +2,7 @@
 from .util import export_matrix
 from .classifier import train_model, psap_predict
 
-__all__ = ["export_matrix", "train_model", "psap_predict"]
+__all__ = ["export_matrix", "train_model", "psap_predict", "eval_model"]
 
 
 __author__ = """Tilman Schaefers"""
