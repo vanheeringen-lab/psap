@@ -30,11 +30,25 @@ Install psap
    python setup.py install
 
 
-annotate peptide sequences and save to pickle object.
+Annotate peptide sequences and save feature data frame to pickle. This step is required before using any dataset for training and prediction.
 --------
 .. code-block:: python
 
    psap annotate -f /path/to/peptide.fasta -o /output/directory       
+
+
+Train RandomForest classifier and save to pickle.
+--------
+.. code-block:: python
+
+   psap train -df /path/to/annotated/peptide/trainingset.pkl -o /output/directory  
+
+
+Predict llps formation for 
+--------
+.. code-block:: python
+
+   psap predict -m /path/to/classifier.joblid -df /path/to/annotated/peptide/testset.pkl -o /output/directory
 
 
 Credits
