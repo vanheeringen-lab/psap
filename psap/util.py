@@ -1,4 +1,4 @@
-from .psap import MakeMatrix
+from .matrix import MakeMatrix
 import datetime
 from pathlib import Path
 
@@ -108,23 +108,22 @@ def annotate(df, identifier_name):
     return df
 
 
-def export_matrix(name, fasta_path, out_path, identifier_name=""):
+def export_matrix(name, fasta_path, out_path):
     # Change pathing
     """Generates and saves a file which contains features of a protein sequence.
     Parameters:
         name: Name of the file.
         fasta_path: Path of the fasta file which needs to be featured.
     """
+    class_col = "llps"
     data = MakeMatrix(fasta_path)
     now = datetime.datetime.now()
     date = str(now.day) + "-" + str(now.month) + "-" + str(now.year)
-    pkl = Path(out_path, name + "_" + identifier_name + "_" + date + ".pkl")
+    pkl = Path(out_path, name + "_" + class_col + "_" + date + ".pkl")
     data.df.to_pickle(pkl)
     print(pkl)
     print("Adding labels to df")
-    df_ann = annotate(data.df, identifier_name)
-    pkl_ann = Path(
-        out_path, name + "_" + identifier_name + "_" + date + "_ann_" + ".pkl"
-    )
+    df_ann = annotate(data.df, class_col)
+    pkl_ann = Path(out_path, name + "_" + class_col + "_" + date + "_ann_" + ".pkl")
     df_ann.to_pickle(pkl_ann)
     print(pkl_ann)

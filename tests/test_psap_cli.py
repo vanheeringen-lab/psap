@@ -5,8 +5,6 @@
 
 import unittest
 
-from psap import psap
-
 
 class TestPsap(unittest.TestCase):
     """Tests for `psap` package."""
