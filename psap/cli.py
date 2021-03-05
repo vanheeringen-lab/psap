@@ -16,7 +16,7 @@ def main():
         help="adds biochemical features to a set of protein sequences in fasta format and writes it to a serialized data frame",
     )
     train = subparsers.add_parser("train", help="train psap model")
-    pp = subparsers.add_parser("pp", help="predict classes")
+    predict = subparsers.add_parser("predict", help="predict classes")
     cv = subparsers.add_parser("cv", help="evaluate model using cross validation")
     annotate.add_argument(
         "-f",
@@ -46,21 +46,21 @@ def main():
         required=True,
         help="Output directory for trained and serialized RandomForest classifier",
     )
-    pp.add_argument(
+    predict.add_argument(
         "-df",
         "--data_frame",
         default=None,
         required=True,
         help="Path to annotated and serialized data frame (output from annotate)",
     )
-    pp.add_argument(
+    predict.add_argument(
         "-m",
         "--model",
         default=None,
         required=True,
         help="Path to serialized RandomForest model",
     )
-    pp.add_argument(
+    predict.add_argument(
         "-o",
         "--out_dir",
         default=None,
@@ -93,7 +93,7 @@ def main():
             prefix=Path(args.out_dir).stem,
             out_dir=args.out_dir,
         )
-    elif args.command == "pp":
+    elif args.command == "predict":
         psap_predict(
             test_data=args.data_frame,
             model=args.model,
