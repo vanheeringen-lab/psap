@@ -23,14 +23,14 @@ CLI interface for the PSAP classifier, Mierlo, G. van. Predicting protein conden
 * Documentation: https://psap-cli.readthedocs.io.
 
 
-Install psap
+1. Install psap
 --------
 .. code-block:: python
 
    python setup.py install
 
 
-Annotate peptide sequences and save feature data frame to pickle.
+2. Annotate peptide sequences and save feature data frame to pickle.
 --------
 .. code-block:: python
 
@@ -38,14 +38,14 @@ Annotate peptide sequences and save feature data frame to pickle.
 
 This step is required before using any dataset for training and prediction
 
-Train RandomForest classifier and save to pickle.
+3. Train RandomForest classifier and save to pickle.
 --------
 .. code-block:: python
 
    psap train -df /path/to/annotated/peptide/trainingset.pkl -o /output/directory  
 
 
-Predict llps formation for 
+4. Predict llps formation probability.
 --------
 .. code-block:: python
 
