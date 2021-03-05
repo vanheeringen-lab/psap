@@ -17,7 +17,7 @@ def main():
     )
     train = subparsers.add_parser("train", help="train psap model")
     predict = subparsers.add_parser("predict", help="predict classes")
-    cv = subparsers.add_parser("cv", help="evaluate model using cross validation")
+    cval = subparsers.add_parser("cval", help="evaluate model using cross validation")
     annotate.add_argument(
         "-f",
         "--fasta",
@@ -67,14 +67,14 @@ def main():
         required=True,
         help="Output directory for prediction results",
     )
-    cv.add_argument(
+    cval.add_argument(
         "-df",
         "--data_frame",
         default=None,
         required=True,
         help="Path to annotated and serialized data frame (output from annotate command)",
     )
-    cv.add_argument(
+    cval.add_argument(
         "-out",
         "--out_dir",
         default=None,
@@ -100,7 +100,7 @@ def main():
             prefix=Path(args.out_dir).stem,
             out_dir=args.out_dir,
         )
-    elif args.command == "cv":
+    elif args.command == "cval":
         eval_model(
             path=args.data_frame,
             prefix=Path(args.out_dir).stem,
