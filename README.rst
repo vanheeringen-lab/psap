@@ -30,6 +30,13 @@ Install psap
    python setup.py install
 
 
+annotate peptide sequences and save to pickle object.
+--------
+.. code-block:: python
+
+   psap annotate -f /path/to/peptide.fasta -o /output/directory       
+
+
 Credits
 -------
 
