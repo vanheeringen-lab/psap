@@ -19,67 +19,67 @@ def main():
     pp = subparsers.add_parser("pp", help="predict classes")
     cv = subparsers.add_parser("cv", help="evaluate model using cross validation")
     annotate.add_argument(
-        "-dbf",
-        "--db_fasta",
+        "-f",
+        "--fasta",
         default=None,
         required=True,
-        help="Path to proteome fasta file",
+        help="Path to peptide fasta file",
     )
     annotate.add_argument(
         "-o",
         "--out",
         default="~",
         required=False,
-        help="Output directory for serialized training-set",
+        help="Output directory for annotated and serialized (pkl) data frame",
     )
     train.add_argument(
         "-df",
         "--data_frame",
         default=None,
         required=True,
-        help="annotated training set",
+        help="Path to annotated and serialized data frame (output from annotate command)",
     )
     train.add_argument(
         "-out",
         "--out_dir",
         default=None,
         required=True,
-        help="output directory for trained model",
+        help="Output directory for trained and serialized RandomForest classifier",
     )
     pp.add_argument(
         "-df",
         "--data_frame",
         default=None,
         required=True,
-        help="data frame with training data",
+        help="Path to annotated and serialized data frame (output from annotate)",
     )
     pp.add_argument(
         "-m",
         "--model",
         default=None,
         required=True,
-        help="trained psap model",
+        help="Path to serialized RandomForest model",
     )
     pp.add_argument(
-        "-out",
+        "-o",
         "--out_dir",
         default=None,
         required=True,
-        help=" serialized data frame with training data",
+        help="Output directory for prediction results",
     )
     cv.add_argument(
         "-df",
         "--data_frame",
         default=None,
         required=True,
-        help="data frame with training data",
+        help="Path to annotated and serialized data frame (output from annotate command)",
     )
     cv.add_argument(
         "-out",
         "--out_dir",
         default=None,
         required=True,
-        help=" serialized data frame with training data",
+        help="Output directory for prediction results",
     )
     args = parser.parse_args()
     # Pickle training-set
