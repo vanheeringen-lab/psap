@@ -43,16 +43,6 @@ CLI interface for the PSAP classifier, Mierlo, G. van. Predicting protein conden
 When no model is provided (-m) psap laods the default model stored in /data/model.
 
 
-* Optional 
- 
- 
- Annotate peptide sequences and save feature data frame to pickle.
---------
-.. code-block:: python
-
-   psap annotate -f /path/to/peptide.fasta -o /output/directory       
-
-
 Credits
 -------
 
