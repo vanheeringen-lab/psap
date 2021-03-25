@@ -1,7 +1,6 @@
 from .matrix import MakeMatrix
 import datetime
-from pathlib import Path
-from joblib import dump, load
+
 
 UNIPROT_IDS = """Q99700
 O60885

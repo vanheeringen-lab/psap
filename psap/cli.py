@@ -33,11 +33,11 @@ def main():
         help="Output directory for annotated and serialized (pkl) data frame",
     )
     train.add_argument(
-        "-df",
-        "--data_frame",
+        "-f",
+        "--fasta",
         default=None,
         required=True,
-        help="Path to annotated and serialized data frame (output from annotate command)",
+        help="Path to peptide fasta file",
     )
     train.add_argument(
         "-o",
@@ -89,13 +89,13 @@ def main():
         )
     elif args.command == "train":
         train_model(
-            path=args.data_frame,
+            path=args.fasta,
             prefix=Path(args.out).stem,
             out_dir=args.out,
         )
     elif args.command == "predict":
         psap_predict(
-            path=args.data_frame,
+            path=args.fasta,
             model=args.model,
             prefix=Path(args.out).stem,
             out_dir=args.out,
