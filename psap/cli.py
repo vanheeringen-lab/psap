@@ -47,11 +47,11 @@ def main():
         help="Output directory for trained and serialized RandomForest classifier",
     )
     predict.add_argument(
-        "-df",
-        "--data_frame",
+        "-f",
+        "--fasta",
         default=None,
         required=True,
-        help="Path to annotated and serialized data frame (output from annotate)",
+        help="Path to peptide fasta file",
     )
     predict.add_argument(
         "-m",
@@ -68,11 +68,11 @@ def main():
         help="Output directory for prediction results",
     )
     cval.add_argument(
-        "-df",
-        "--data_frame",
+        "-f",
+        "--fasta",
         default=None,
         required=True,
-        help="Path to annotated and serialized data frame (output from annotate command)",
+        help="Path to peptide fasta file",
     )
     cval.add_argument(
         "-o",
