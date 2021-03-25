@@ -13,9 +13,6 @@ psap
         :target: https://psap-cli.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-
-
-
 CLI interface for the PSAP classifier, Mierlo, G. van. Predicting protein condensate formation using machine learning (Manuscript in Preparation).
 
 
@@ -55,21 +52,6 @@ When no model is provided (-m) psap laods the default model stored in /data/mode
 
    psap annotate -f /path/to/peptide.fasta -o /output/directory       
 
-
-
-
-
-CLI interface for the PSAP classifier, Mierlo, G. van. Predicting protein condensate formation using machine learning (Manuscript in Preparation).
-
-
-* Free software: MIT license
-* Documentation: https://psap-cli.readthedocs.io.
-
-
-Features
---------
-
-* TODO
 
 Credits
 -------
