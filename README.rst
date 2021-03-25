@@ -12,20 +12,6 @@ psap
 .. image:: https://readthedocs.org/projects/psap-cli/badge/?version=latest
         :target: https://psap-cli.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
-========
-psap
-========
-
-
-.. image:: https://img.shields.io/pypi/v/psap_cli.svg
-        :target: https://pypi.python.org/pypi/psap_cli
-
-.. image:: https://img.shields.io/travis/tilschaef/psap_cli.svg
-        :target: https://travis-ci.com/tilschaef/psap_cli
-
-.. image:: https://readthedocs.org/projects/psap-cli/badge/?version=latest
-        :target: https://psap-cli.readthedocs.io/en/latest/?badge=latest
-        :alt: Documentation Status
 
 
 
