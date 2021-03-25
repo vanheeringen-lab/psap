@@ -56,8 +56,8 @@ def main():
     predict.add_argument(
         "-m",
         "--model",
-        default=None,
-        required=True,
+        default="data/model/UP000005640_9606_llps.joblid",
+        required=False,
         help="Path to serialized RandomForest model",
     )
     predict.add_argument(
