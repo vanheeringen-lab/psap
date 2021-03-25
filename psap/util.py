@@ -1,6 +1,7 @@
 from .matrix import MakeMatrix
 import datetime
 from pathlib import Path
+from joblib import dump, load
 
 UNIPROT_IDS = """Q99700
 O60885
@@ -119,11 +120,7 @@ def export_matrix(name, fasta_path, out_path):
     data = MakeMatrix(fasta_path)
     now = datetime.datetime.now()
     date = str(now.day) + "-" + str(now.month) + "-" + str(now.year)
-    pkl = Path(out_path, name + "_" + class_col + "_" + date + ".pkl")
-    data.df.to_pickle(pkl)
-    print(pkl)
     print("Adding labels to df")
     df_ann = annotate(data.df, class_col)
-    pkl_ann = Path(out_path, name + "_" + class_col + "_" + date + "_ann_" + ".pkl")
-    df_ann.to_pickle(pkl_ann)
-    print(pkl_ann)
+    pkl_ann = Path(out_path, name + "_" + class_col + "_" + date + "_ann_" + ".joblid")
+    dump(df_ann, pkl_ann)

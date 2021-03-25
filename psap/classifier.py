@@ -7,7 +7,7 @@ from random import sample
 from tqdm.notebook import tqdm
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.ensemble import RandomForestClassifier
-from joblib import dump, load
+import sklearn_json as skljson
 
 
 def preprocess_and_scaledata(data, ccol):
@@ -230,7 +230,7 @@ def train_model(path, prefix="", out_dir=""):
     )
     clf.fit(X, y)
     # Serialize trained model
-    dump(clf, f"{out_dir}/psap_model_{prefix}.joblid")
+    skljson.to_json(clf, f"{out_dir}/psap_model_{prefix}.json")
 
 
 def psap_predict(path, model, prefix="", out_dir=""):
@@ -245,7 +245,7 @@ def psap_predict(path, model, prefix="", out_dir=""):
     out_dir:
         path to create output folder.
     """
-    clf = load(model)
+    clf = skljson.from_json(model)
     data = pd.read_pickle(path)
     # Make directory for output.
     try:
