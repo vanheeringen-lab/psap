@@ -33,11 +33,11 @@ def main():
         help="Output directory for annotated and serialized (pkl) data frame",
     )
     train.add_argument(
-        "-df",
-        "--data_frame",
+        "-f",
+        "--fasta",
         default=None,
         required=True,
-        help="Path to annotated and serialized data frame (output from annotate command)",
+        help="Path to peptide fasta file",
     )
     train.add_argument(
         "-o",
@@ -47,17 +47,17 @@ def main():
         help="Output directory for trained and serialized RandomForest classifier",
     )
     predict.add_argument(
-        "-df",
-        "--data_frame",
+        "-f",
+        "--fasta",
         default=None,
         required=True,
-        help="Path to annotated and serialized data frame (output from annotate)",
+        help="Path to peptide fasta file",
     )
     predict.add_argument(
         "-m",
         "--model",
-        default=None,
-        required=True,
+        default="data/model/UP000005640_9606_llps.json",
+        required=False,
         help="Path to serialized RandomForest model",
     )
     predict.add_argument(
@@ -68,11 +68,11 @@ def main():
         help="Output directory for prediction results",
     )
     cval.add_argument(
-        "-df",
-        "--data_frame",
+        "-f",
+        "--fasta",
         default=None,
         required=True,
-        help="Path to annotated and serialized data frame (output from annotate command)",
+        help="Path to peptide fasta file",
     )
     cval.add_argument(
         "-o",
@@ -89,13 +89,13 @@ def main():
         )
     elif args.command == "train":
         train_model(
-            path=args.data_frame,
+            path=args.fasta,
             prefix=Path(args.out).stem,
             out_dir=args.out,
         )
     elif args.command == "predict":
         psap_predict(
-            path=args.data_frame,
+            path=args.fasta,
             model=args.model,
             prefix=Path(args.out).stem,
             out_dir=args.out,

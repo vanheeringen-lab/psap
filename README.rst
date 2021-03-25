@@ -13,9 +13,6 @@ psap
         :target: https://psap-cli.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-
-
-
 CLI interface for the PSAP classifier, Mierlo, G. van. Predicting protein condensate formation using machine learning (Manuscript in Preparation).
 
 
@@ -23,10 +20,35 @@ CLI interface for the PSAP classifier, Mierlo, G. van. Predicting protein conden
 * Documentation: https://psap-cli.readthedocs.io.
 
 
-Features
+1. Install psap
 --------
+.. code-block:: python
 
-* TODO
+   python setup.py install
+
+
+2. Train RandomForest classifier and save to json.
+--------
+.. code-block:: python
+
+   psap train -f /path/to/peptide-trainingset.fasta  -o /output/directory  
+
+
+3. Predict llps formation probability.
+--------
+.. code-block:: python
+
+   psap predict -m /path/to/model.json -f /path/to/peptid-testset.fasta -o /output/directory
+   
+When no model is provided (-m) psap laods the default model stored in /data/model.
+
+
+4. Annotate peptide sequences and save feature data frame to csv (debugging)
+--------
+.. code-block:: python
+
+   psap annotate -f /path/to/peptide.fasta -o /output/directory    
+
 
 Credits
 -------
