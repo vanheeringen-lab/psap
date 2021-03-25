@@ -122,5 +122,6 @@ def export_matrix(name, fasta_path, out_path):
     date = str(now.day) + "-" + str(now.month) + "-" + str(now.year)
     print("Adding labels to df")
     df_ann = annotate(data.df, class_col)
-    pkl_ann = Path(out_path, name + "_" + class_col + "_" + date + "_ann_" + ".joblid")
-    dump(df_ann, pkl_ann)
+    return df_ann
+    # pkl_ann = Path(out_path, name + "_" + class_col + "_" + date + "_ann_" + ".joblid")
+    # dump(df_ann, pkl_ann)

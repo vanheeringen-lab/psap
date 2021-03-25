@@ -8,6 +8,7 @@ from tqdm.notebook import tqdm
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.ensemble import RandomForestClassifier
 import sklearn_json as skljson
+from psap.util import export_matrix
 
 
 def preprocess_and_scaledata(data, ccol):
@@ -216,7 +217,8 @@ def train_model(path, prefix="", out_dir=""):
         print(
             f"Directory {prefix} already exists. Please choose another analysis name, or remove the directory {prefix}."
         )
-    data = pd.read_pickle(path)
+    print("annotating fasta")
+    data = export_matrix(name=prefix, fasta_path=path, out_path=out_dir)
     data_ps = preprocess_and_scaledata(data, "llps")
     data_numeric = data_ps.select_dtypes([np.number])
     X = data_numeric.drop("llps", axis=1)
@@ -245,8 +247,13 @@ def psap_predict(path, model, prefix="", out_dir=""):
     out_dir:
         path to create output folder.
     """
-    clf = skljson.from_json(model)
-    data = pd.read_pickle(path)
+    print("Loading model")
+    try:
+        clf = skljson.from_json(model)
+    except:
+        print("An error occured while importing the model from json")
+    print("annotating fasta")
+    data = export_matrix(name=prefix, fasta_path=path, out_path=out_dir)
     # Make directory for output.
     try:
         os.mkdir(f"{out_dir}")
