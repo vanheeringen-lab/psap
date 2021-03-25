@@ -9,6 +9,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.ensemble import RandomForestClassifier
 import sklearn_json as skljson
 from psap.util import export_matrix
+from pathlib import Path
 
 
 def preprocess_and_scaledata(data, ccol):
@@ -211,12 +212,6 @@ def train_model(path, prefix="", out_dir=""):
     out_dir:
         path to create output folder.
     """
-    try:
-        os.mkdir(f"{out_dir}")
-    except:
-        print(
-            f"Directory {prefix} already exists. Please choose another analysis name, or remove the directory {prefix}."
-        )
     print("annotating fasta")
     data = export_matrix(name=prefix, fasta_path=path, out_path=out_dir)
     data_ps = preprocess_and_scaledata(data, "llps")
@@ -231,8 +226,10 @@ def train_model(path, prefix="", out_dir=""):
         random_state=42,
     )
     clf.fit(X, y)
-    # Serialize trained model
-    skljson.to_json(clf, f"{out_dir}/psap_model_{prefix}.json")
+    # write model to json
+    out_dir = Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    skljson.to_json(clf, out_dir / f"psap_model_{prefix}.json")
 
 
 def psap_predict(path, model, prefix="", out_dir=""):
@@ -254,13 +251,7 @@ def psap_predict(path, model, prefix="", out_dir=""):
         print("An error occured while importing the model from json")
     print("annotating fasta")
     data = export_matrix(name=prefix, fasta_path=path, out_path=out_dir)
-    # Make directory for output.
-    try:
-        os.mkdir(f"{out_dir}")
-    except:
-        print(
-            f"Directory {prefix} already exists. Please choose another analysis name, or remove the directory {prefix}."
-        )
+    # Preprocessing
     data_ps = preprocess_and_scaledata(data, "llps")
     data_numeric = data_ps.select_dtypes([np.number])
     X = data_numeric.drop("llps", axis=1)
@@ -273,4 +264,7 @@ def psap_predict(path, model, prefix="", out_dir=""):
         ascending=False
     )
     psap_prediction["rank"] = rank
-    psap_prediction.to_csv(f"{out_dir}/prediction_{prefix}.csv")
+    # Make directory for output
+    out_dir = Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    psap_prediction.to_csv(out_dir / f"prediction_{prefix}.csv")

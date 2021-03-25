@@ -1,6 +1,6 @@
 from .matrix import MakeMatrix
 import datetime
-
+from pathlib import Path
 
 UNIPROT_IDS = """Q99700
 O60885
@@ -121,6 +121,8 @@ def export_matrix(name, fasta_path, out_path):
     date = str(now.day) + "-" + str(now.month) + "-" + str(now.year)
     print("Adding labels to df")
     df_ann = annotate(data.df, class_col)
+    # Write data frame to csv
+    out_dir = Path(out_path)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    df_ann.to_csv(out_dir / f"{name}_{class_col}_{date}_ann.csv")
     return df_ann
-    # pkl_ann = Path(out_path, name + "_" + class_col + "_" + date + "_ann_" + ".joblid")
-    # dump(df_ann, pkl_ann)
