@@ -1,11 +1,11 @@
 """Top-level package for psap."""
-from .classifier import train_model, psap_predict, export_matrix, eval_model
+from .classifier import train, predict, export_matrix, cval
 
 __all__ = [
     "export_matrix",
-    "train_model",
-    "psap_predict",
-    "eval_model",
+    "train",
+    "predict",
+    "cval",
 ]
 
 

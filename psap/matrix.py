@@ -54,11 +54,7 @@ HP = {
     "U": 0.0,
 }
 
-
-def convolve_signal(sig, window=25):
-    win = signal.hann(window)
-    sig = signal.convolve(sig, win, mode="same") / sum(win)
-    return sig
+COV_WINDOW = 30
 
 
 class HydroPhobicIndex:
@@ -161,7 +157,12 @@ class MakeMatrix:
         )
         for index, row in tqdm(self.df.iterrows(), total=self.df.shape[0]):
             # for index, row in self.df.iterrows():
-            sw = convolve_signal(row["HydroPhobicIndex"].hpilist, window=30)
+            # Convolve signal
+            win = signal.hann(COV_WINDOW)
+            sw = signal.convolve(
+                row["HydroPhobicIndex"].hpilist, win, mode="same"
+            ) / sum(win)
+            # Append features
             hpi0.append(sum(i < -1.5 for i in sw) / len(sw))
             # self.df.loc[index, 'hpi_<-1.5_frac'] = hpi
             hpi1.append(sum(i < -2.0 for i in sw) / len(sw))

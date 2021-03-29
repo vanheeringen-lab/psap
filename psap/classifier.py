@@ -205,7 +205,7 @@ def predict_proteome(
         return prediction
 
 
-def eval_model(path, prefix, out_dir=""):
+def cval(path, prefix, out_dir=""):
     """
     Wrapper for predict_proteome.
     ----
@@ -235,7 +235,7 @@ def eval_model(path, prefix, out_dir=""):
     prediction.to_csv(f"{out_dir}/prediction_{prefix}.csv")
 
 
-def train_model(path, prefix="", out_dir=""):
+def train(path, prefix="", out_dir=""):
     """
     ----
     path: str
@@ -265,7 +265,7 @@ def train_model(path, prefix="", out_dir=""):
     skljson.to_json(clf, out_dir / f"psap_model_{prefix}.json")
 
 
-def psap_predict(path, model, prefix="", out_dir=""):
+def predict(path, model, prefix="", out_dir=""):
     """
     ----
     path: str

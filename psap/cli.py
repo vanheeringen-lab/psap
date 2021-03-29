@@ -2,78 +2,79 @@
 import argparse
 import sys
 from pathlib import Path
-from psap.classifier import train_model, psap_predict, eval_model, export_matrix
+from psap.classifier import train, predict, cval, export_matrix
 
 
 def main():
     """Console script for psap."""
     parser = argparse.ArgumentParser()
-    # parser.add_argument("-v", "--version", action="version", version=psap.__version__)
     subparsers = parser.add_subparsers(dest="command")
-    annotate = subparsers.add_parser(
+    psap_annotate = subparsers.add_parser(
         "annotate",
         help="adds biochemical features to a set of protein sequences in fasta format and writes it to a serialized data frame",
     )
-    train = subparsers.add_parser("train", help="train psap model")
-    predict = subparsers.add_parser("predict", help="predict classes")
-    cval = subparsers.add_parser("cval", help="evaluate model using cross validation")
-    annotate.add_argument(
+    psap_train = subparsers.add_parser("train", help="train psap model")
+    psap_predict = subparsers.add_parser("predict", help="predict classes")
+    psap_cval = subparsers.add_parser(
+        "cval", help="evaluate model using cross validation"
+    )
+    psap_annotate.add_argument(
         "-f",
         "--fasta",
         default=None,
         required=True,
         help="Path to peptide fasta file",
     )
-    annotate.add_argument(
+    psap_annotate.add_argument(
         "-o",
         "--out",
         default="~",
         required=False,
         help="Output directory for annotated and serialized (pkl) data frame",
     )
-    train.add_argument(
+    psap_train.add_argument(
         "-f",
         "--fasta",
         default=None,
         required=True,
         help="Path to peptide fasta file",
     )
-    train.add_argument(
+    psap_train.add_argument(
         "-o",
         "--out",
         default=None,
         required=True,
         help="Output directory for trained and serialized RandomForest classifier",
     )
-    predict.add_argument(
+    psap_predict.add_argument(
         "-f",
         "--fasta",
         default=None,
         required=True,
         help="Path to peptide fasta file",
     )
-    predict.add_argument(
+    psap_predict.add_argument(
         "-m",
         "--model",
         default="data/model/UP000005640_9606_llps.json",
         required=False,
         help="Path to serialized RandomForest model",
     )
-    predict.add_argument(
+    psap_predict.add_argument(
         "-o",
         "--out",
         default=None,
         required=True,
         help="Output directory for prediction results",
     )
-    cval.add_argument(
+    psap_cval.add_argument(
         "-f",
         "--fasta",
         default=None,
         required=True,
         help="Path to peptide fasta file",
     )
-    cval.add_argument(
+    psap_cval.add_argument(
         "-o",
         "--out",
         default=None,
@@ -87,20 +88,20 @@ def main():
             name=Path(args.fasta).stem, fasta_path=args.fasta, out_path=args.out
         )
     elif args.command == "train":
-        train_model(
+        train(
             path=args.fasta,
             prefix=Path(args.out).stem,
             out_dir=args.out,
         )
     elif args.command == "predict":
-        psap_predict(
+        predict(
             path=args.fasta,
             model=args.model,
             prefix=Path(args.out).stem,
             out_dir=args.out,
         )
     elif args.command == "cval":
-        eval_model(
+        cval(
             path=args.data_frame,
             prefix=Path(args.out).stem,
             out_dir=args.out,
