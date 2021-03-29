@@ -6,7 +6,6 @@ from tqdm.auto import tqdm
 import time
 from scipy import signal
 
-
 RESIDUES = [
     "A",
     "C",
@@ -56,6 +55,17 @@ HP = {
 }
 
 
+def convolve_signal(sig, window=25):
+    win = signal.hann(window)
+    sig = signal.convolve(sig, win, mode="same") / sum(win)
+    return sig
+
+
+class HydroPhobicIndex:
+    def __init__(self, hpilist):
+        self.hpilist = hpilist
+
+
 class MakeMatrix:
     """
     Creates a pandas data frame with biochemical features
@@ -73,9 +83,11 @@ class MakeMatrix:
     def add_features(self):
         executables = [
             "self.fasta2df()",
+            "self.hydrophobic()",
+            "self.add_hydrophobic_features()",
             "self.amino_acid_analysis()",
             "self.add_biochemical_combinations()",
-            "self.add_lowcomplexity_features()",
+            # "self.add_lowcomplexity_features()",
         ]
         for e in executables:
             start = time.time()
@@ -108,6 +120,11 @@ class MakeMatrix:
                     rows.append([name, uniprot_id, seq])
         self.df = pd.DataFrame(rows, columns=["protein_name", "uniprot_id", "sequence"])
 
+    def hydrophobic(self):
+        for index, row in self.df.iterrows():
+            hpilst = pd.Series(list(row["sequence"])).map(HP).tolist()
+            self.df.loc[index, "HydroPhobicIndex"] = HydroPhobicIndex(hpilst)
+
     def amino_acid_analysis(self):
         """
         Adds fraction of amino acid residues (defined in RESIDUES) to data frame.
@@ -132,12 +149,6 @@ class MakeMatrix:
         for index, row in self.df.iterrows():
             hpilst = pd.Series(list(row["sequence"])).map(HP).tolist()
             self.df.loc[index, "HydroPhobicIndex"] = HydroPhobicIndex(hpilst)
-
-    @staticmethod
-    def convolve_signal(sig, window=25):
-        win = signal.hann(window)
-        sig = signal.convolve(sig, win, mode="same") / sum(win)
-        return sig
 
     def add_hydrophobic_features(self):
         hpi0, hpi1, hpi2, hpi3, hpi4, hpi5 = (

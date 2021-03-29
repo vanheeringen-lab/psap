@@ -1,6 +1,7 @@
 from .matrix import MakeMatrix
 import datetime
 from pathlib import Path
+from scipy import signal
 
 
 def annotate(df, identifier_name):

@@ -245,10 +245,10 @@ def psap_predict(path, model, prefix="", out_dir=""):
         path to create output folder.
     """
     print("Loading model")
-    try:
-        clf = skljson.from_json(model)
-    except:
-        print("An error occured while importing the model from json")
+
+    clf = skljson.from_json(model)
+    print(clf)
+
     print("annotating fasta")
     data = export_matrix(name=prefix, fasta_path=path, out_path=out_dir)
     # Preprocessing
@@ -264,7 +264,7 @@ def psap_predict(path, model, prefix="", out_dir=""):
         ascending=False
     )
     psap_prediction["rank"] = rank
-    # Make directory for output
+    # # Make directory for output
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     psap_prediction.to_csv(out_dir / f"prediction_{prefix}.csv")
