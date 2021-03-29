@@ -87,7 +87,7 @@ class MakeMatrix:
             "self.add_hydrophobic_features()",
             "self.amino_acid_analysis()",
             "self.add_biochemical_combinations()",
-            # "self.add_lowcomplexity_features()",
+            "self.add_lowcomplexity_features()",
         ]
         for e in executables:
             start = time.time()
@@ -364,6 +364,10 @@ class MakeMatrix:
                             & (low_complexity_list["acid"] == i)
                         ]
                     ) / len(lcs_acids)
+            else:
+                for i in RESIDUES:
+                    self.df.loc[index, i + "_lcscore"] = 0
+                    self.df.loc[index, i + "_lcfraction"] = 0
         self.df["lcs_fractions"] = lcs_fractions
         self.df["lcs_scores"] = lcs_scores
         self.df["lcs_lowest_complexity"] = lcs_lowest_complexity

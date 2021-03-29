@@ -245,10 +245,8 @@ def psap_predict(path, model, prefix="", out_dir=""):
         path to create output folder.
     """
     print("Loading model")
-
+    print(model)
     clf = skljson.from_json(model)
-    print(clf)
-
     print("annotating fasta")
     data = export_matrix(name=prefix, fasta_path=path, out_path=out_dir)
     # Preprocessing
