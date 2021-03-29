@@ -1,6 +1,5 @@
 """Top-level package for psap."""
-from .util import export_matrix
-from .classifier import train_model, psap_predict
+from .classifier import train_model, psap_predict, export_matrix, eval_model
 
 __all__ = [
     "export_matrix",

@@ -55,6 +55,12 @@ HP = {
 }
 
 
+def convolve_signal(sig, window=25):
+    win = signal.hann(window)
+    sig = signal.convolve(sig, win, mode="same") / sum(win)
+    return sig
+
+
 class HydroPhobicIndex:
     def __init__(self, hpilist):
         self.hpilist = hpilist
@@ -138,12 +144,6 @@ class MakeMatrix:
                 self.df.loc[index, "molecular_weight"] = seqanalysis.molecular_weight()
             if "U" not in seq and "X" not in seq and "B" not in seq:
                 self.df.loc[index, "gravy"] = seqanalysis.gravy()
-
-    @static
-    def convolve_signal(sig, window=25):
-        win = signal.hann(window)
-        sig = signal.convolve(sig, win, mode="same") / sum(win)
-        return sig
 
     def hydrophobic(self):
         for index, row in self.df.iterrows():

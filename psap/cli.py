@@ -2,8 +2,7 @@
 import argparse
 import sys
 from pathlib import Path
-from psap.util import export_matrix
-from psap.classifier import train_model, psap_predict, eval_model
+from psap.classifier import train_model, psap_predict, eval_model, export_matrix
 
 
 def main():
