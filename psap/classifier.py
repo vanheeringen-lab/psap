@@ -246,7 +246,10 @@ def psap_predict(path, model, prefix="", out_dir=""):
     """
     print("Loading model")
     print(model)
-    clf = skljson.from_json(model)
+    try:
+        clf = skljson.from_json(model)
+    except:
+        print("An error occured while importing the model from json")
     print("annotating fasta")
     data = export_matrix(name=prefix, fasta_path=path, out_path=out_dir)
     # Preprocessing
