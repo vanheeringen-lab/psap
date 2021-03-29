@@ -7,7 +7,6 @@ __all__ = [
     "train_model",
     "psap_predict",
     "eval_model",
-    "convolve_signal",
 ]
 
 
