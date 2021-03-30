@@ -26,11 +26,7 @@ Getting Started
 ------
 ..code-block:: shell-session
    cd psap
-
-
-.. code-block:: python
-   python setup.py install
-
+   
 2. *Train classifier*
 --------
 .. code-block:: python
