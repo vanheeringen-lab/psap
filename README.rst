@@ -18,22 +18,23 @@ CLI interface for the PSAP classifier, Mierlo, G. van. Predicting protein conden
 
 * Free software: MIT license
 
-**Getting started**
+*Getting Started*
 
-1. Install psap
---------
+1. ***Install psap***
+------
+.. code-block:: bash
+   git clone https://github.com/vanheeringen-lab/psap.git && cd psap
 .. code-block:: python
-   cd psap     
    python setup.py install
 
-2. Train RandomForest classifier and save to json.
+2. ***Train classifier*** 
 --------
 .. code-block:: python
 
    psap train -f /path/to/peptide-trainingset.fasta  -o /output/directory  
+The trainined classifier is saved in json format in the output directory.
 
-
-3. Predict llps formation probability.
+3. ***Predict llps***.
 --------
 .. code-block:: python
 
