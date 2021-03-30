@@ -44,10 +44,7 @@ The trained RandomForest classifiers is exported to json format and stored in th
    
 When no model is provided (-m) psap loads the default classifier stored in /data/model.
 
-Optional
--------
-
-*Annotate petides*
+4. *Annotate petides (optional)*
 --------
 .. code-block:: python
 
