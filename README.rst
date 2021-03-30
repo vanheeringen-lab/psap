@@ -34,7 +34,7 @@ Getting Started
 .. code-block:: python
 
    psap train -f /path/to/peptide-trainingset.fasta  -o /output/directory  
-The trained RandomForest classifiers is exported to json format and stored in the output directory.
+The trained RandomForest classifier is exported to json format and stored in the output directory.
 
 3. *Predict llps score for peptide instances*
 --------
