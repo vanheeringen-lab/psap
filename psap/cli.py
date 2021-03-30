@@ -2,6 +2,7 @@
 import argparse
 import sys
 from pathlib import Path
+import psap
 from psap.classifier import train, predict, cval, export_matrix
 
 
@@ -9,6 +10,12 @@ def main():
     """Console script for psap."""
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest="command")
+    parser.add_argument(
+        "-v",
+        "--version",
+        action="version",
+        version=f"psap: v{psap.__version__}",
+    )
     psap_annotate = subparsers.add_parser(
         "annotate",
         help="adds biochemical features to a set of protein sequences in fasta format and writes it to a serialized data frame",
