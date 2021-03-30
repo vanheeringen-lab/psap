@@ -24,7 +24,7 @@ Getting Started
 
 1. *Install psap*
 ------
-.. code-block:: python
+.. code-block:: type
    cd psap
    
 2. *Train classifier*
