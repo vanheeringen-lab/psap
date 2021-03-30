@@ -24,7 +24,6 @@ Getting Started
 
 1. *Install psap*
 ------
-Clone this repository.
 ..code-block:: bash
    cd psap
 
