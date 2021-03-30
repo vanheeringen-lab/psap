@@ -24,7 +24,7 @@ Getting Started
 
 1. *Install psap*
 ------
-..code-block:: console
+..code-block:: shell-session
    cd psap
 
 
