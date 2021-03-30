@@ -1,8 +1,12 @@
 """Top-level package for psap."""
-from .util import export_matrix
-from .classifier import train_model, psap_predict
+from .classifier import train, predict, export_matrix, cval
 
-__all__ = ["export_matrix", "train_model", "psap_predict", "eval_model"]
+__all__ = [
+    "export_matrix",
+    "train",
+    "predict",
+    "cval",
+]
 
 
 __author__ = """Tilman Schaefers"""

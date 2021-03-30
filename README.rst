@@ -13,9 +13,6 @@ psap
         :target: https://psap-cli.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-
-
-
 CLI interface for the PSAP classifier, Mierlo, G. van. Predicting protein condensate formation using machine learning (Manuscript in Preparation).
 
 
@@ -29,20 +26,20 @@ CLI interface for the PSAP classifier, Mierlo, G. van. Predicting protein conden
 
    python setup.py install
 
-
-2. Annotate peptide sequences and save feature data frame to pickle.
+2. Train RandomForest classifier and save to json.
 --------
 .. code-block:: python
 
-   psap annotate -f /path/to/peptide.fasta -o /output/directory       
+   psap train -f /path/to/peptide-trainingset.fasta  -o /output/directory  
 
-This step is required before using any dataset for training and prediction
 
-3. Train RandomForest classifier and save to pickle.
+3. Predict llps formation probability.
 --------
 .. code-block:: python
 
-   psap train -df /path/to/annotated/peptide/trainingset.pkl -o /output/directory  
+   psap predict -m /path/to/model.json -f /path/to/peptid-testset.fasta -o /output/directory
+   
+When no model is provided (-m) psap loads the default classifier stored in /data/model.
 
 
 4. Predict llps formation probability.
@@ -50,6 +47,19 @@ This step is required before using any dataset for training and prediction
 .. code-block:: python
 
    psap predict -m /path/to/classifier.joblid -df /path/to/annotated/peptide/testset.pkl -o /output/directory
+
+
+Optional
+-------
+
+Annotate peptide sequences and save feature data frame to csv (debugging)
+--------
+.. code-block:: python
+
+   psap annotate -f /path/to/peptide.fasta -o /output/directory    
+
+
+
 
 
 Credits
