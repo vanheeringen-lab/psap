@@ -41,14 +41,6 @@ CLI interface for the PSAP classifier, Mierlo, G. van. Predicting protein conden
    
 When no model is provided (-m) psap loads the default classifier stored in /data/model.
 
-
-4. Predict llps formation probability.
---------
-.. code-block:: python
-
-   psap predict -m /path/to/classifier.joblid -df /path/to/annotated/peptide/testset.pkl -o /output/directory
-
-
 Optional
 -------
 
