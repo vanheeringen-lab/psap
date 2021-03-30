@@ -53,7 +53,7 @@ Optional
 
    psap annotate -f /path/to/peptide.fasta -o /output/directory    
 
-Annotates a peptide fasta with biochemical features.
+Annotates a peptide fasta with biochemical features. This step is included in train and predict.
 
 
 
