@@ -18,11 +18,12 @@ CLI interface for the PSAP classifier, Mierlo, G. van. Predicting protein conden
 
 * Free software: MIT license
 
+**Getting started**
 
 1. Install psap
 --------
 .. code-block:: python
-
+   cd psap     
    python setup.py install
 
 2. Train RandomForest classifier and save to json.
