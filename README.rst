@@ -23,7 +23,7 @@ Getting Started
 ========
 
 1. *Install psap*
-------
+--------
 .. code-block:: type
    cd psap
    
