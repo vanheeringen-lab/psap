@@ -17,23 +17,26 @@ CLI interface for the PSAP classifier, Mierlo, G. van. Predicting protein conden
 
 
 * Free software: MIT license
-* Documentation: https://psap-cli.readthedocs.io.
 
+========
+Getting Started
+========
 
-1. Install psap
+1. *Install psap*
 --------
-.. code-block:: python
-
-   python setup.py install
-
-2. Train RandomForest classifier and save to json.
+.. code-block:: bash
+   
+   git clone https://github.com/vanheeringen-lab/psap.git
+   cd psap && python setup.py install
+   
+2. *Train classifier*
 --------
 .. code-block:: python
 
    psap train -f /path/to/peptide-trainingset.fasta  -o /output/directory  
+The trained RandomForest classifier is exported to json format and stored in the output directory.
 
-
-3. Predict llps formation probability.
+3. *Predict llps score for peptide instances*
 --------
 .. code-block:: python
 
@@ -41,24 +44,13 @@ CLI interface for the PSAP classifier, Mierlo, G. van. Predicting protein conden
    
 When no model is provided (-m) psap loads the default classifier stored in /data/model.
 
-
-4. Predict llps formation probability.
---------
-.. code-block:: python
-
-   psap predict -m /path/to/classifier.joblid -df /path/to/annotated/peptide/testset.pkl -o /output/directory
-
-
-Optional
--------
-
-Annotate peptide sequences and save feature data frame to csv (debugging)
+4. *Annotate petides (optional)*
 --------
 .. code-block:: python
 
    psap annotate -f /path/to/peptide.fasta -o /output/directory    
 
-
+Annotates a peptide fasta with biochemical features. This step is included in train and predict.
 
 
 
