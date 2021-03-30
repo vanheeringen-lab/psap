@@ -351,6 +351,10 @@ class MakeMatrix:
             low_complexity_list = pd.DataFrame(
                 {"bool": lc_bool, "acid": list(seq)}, index=None
             )
+            # Add default values
+            for i in RESIDUES:
+                self.df.loc[index, i + "_lcscore"] = 0
+                self.df.loc[index, i + "_lcfraction"] = 0
             if len(lcs_acids) >= n_window:
                 for i in RESIDUES:
                     self.df.loc[index, i + "_lcscore"] = len(
@@ -365,10 +369,6 @@ class MakeMatrix:
                             & (low_complexity_list["acid"] == i)
                         ]
                     ) / len(lcs_acids)
-            else:
-                for i in RESIDUES:
-                    self.df.loc[index, i + "_lcscore"] = 0
-                    self.df.loc[index, i + "_lcfraction"] = 0
         self.df["lcs_fractions"] = lcs_fractions
         self.df["lcs_scores"] = lcs_scores
         self.df["lcs_lowest_complexity"] = lcs_lowest_complexity

@@ -16,7 +16,6 @@ from .matrix import MakeMatrix
 def annotate(df, identifier_name):
     with open("data/assets/uniprot_ids.txt") as f:
         uniprot_ids = [line.rstrip() for line in f]
-    print(uniprot_ids)
     df[identifier_name] = 0
     for prot_id in uniprot_ids:
         df.loc[df["uniprot_id"] == prot_id, identifier_name] = 1
