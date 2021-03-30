@@ -40,7 +40,7 @@ setup(
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     packages=find_packages(include=["psap", "psap.*"]),
-    package_data={"models": ["model/*.json"], "assets": ["data/*"]},
+    package_data={"models": ["data/model/*.json"], "assets": ["data/assets/*"]},
     install_requires=requirements,
     url="https://github.com/tilschaef/psap",
 )
