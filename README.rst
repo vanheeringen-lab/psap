@@ -25,7 +25,7 @@ Getting Started
 1. *Install psap*
 --------
 Clone this repository
-.. code-block:: bash
+.. code-block:: text
    
    cd psap && python setup.py install
    
