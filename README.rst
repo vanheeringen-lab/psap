@@ -22,7 +22,7 @@ CLI interface for the PSAP classifier, Mierlo, G. van. Predicting protein conden
 
 1. *Install psap*
 ------
-Clone this repository::
+Clone this repository.
 ..code-block:: bash
    cd psap
 
