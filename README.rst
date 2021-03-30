@@ -18,7 +18,9 @@ CLI interface for the PSAP classifier, Mierlo, G. van. Predicting protein conden
 
 * Free software: MIT license
 
-*Getting Started*
+========
+Getting Started
+========
 
 1. *Install psap*
 ------
