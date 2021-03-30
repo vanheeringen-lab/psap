@@ -14,7 +14,7 @@ from .matrix import MakeMatrix
 
 
 def annotate(df, identifier_name):
-    with open("data/assets/uniprot_ids.txt") as f:
+    with open(Path(__file__).parent / "data/assets/uniprot_ids.txt") as f:
         uniprot_ids = [line.rstrip() for line in f]
     df[identifier_name] = 0
     for prot_id in uniprot_ids:

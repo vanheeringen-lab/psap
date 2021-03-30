@@ -1,2 +1,4 @@
 include versioneer.py
 include psap/_version.py
+include psap/data/model/*.json
+include psap/data/assets/*.txt

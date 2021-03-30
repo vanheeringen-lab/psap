@@ -56,7 +56,7 @@ def main():
     psap_predict.add_argument(
         "-m",
         "--model",
-        default="data/model/UP000005640_9606_llps.json",
+        default=Path(__file__).parent / "data/model/UP000005640_9606_llps.json",
         required=False,
         help="Path to serialized RandomForest model",
     )
