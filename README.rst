@@ -25,6 +25,7 @@ Getting Started
 1. *Install psap*
 --------
 .. code-block:: text
+   
    cd psap
    
 2. *Train classifier*
