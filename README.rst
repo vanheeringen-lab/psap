@@ -26,6 +26,7 @@ Getting Started
 --------
 .. code-block:: bash
    
+   git clone https://github.com/vanheeringen-lab/psap.git
    cd psap && python setup.py install
    
 2. *Train classifier*
