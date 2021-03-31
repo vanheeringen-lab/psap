@@ -278,11 +278,7 @@ def predict(path="", model="", prefix="", labels="", out_dir=""):
     """
     print("Loading model")
     print(model)
-    clf = None
-    try:
-        clf = skljson.from_json(model)
-    except:
-        print("An error occured while importing the model from json")
+    clf = skljson.from_json(model)
     print("annotating fasta")
     data = export_matrix(name=prefix, fasta_path=path, labels=labels, out_path=out_dir)
     # Preprocessing
