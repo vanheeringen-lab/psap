@@ -53,6 +53,13 @@ def main():
         required=True,
         help="Output directory for trained and serialized RandomForest classifier",
     )
+    psap_train.add_argument(
+        "-l",
+        "--labels",
+        default=Path(__file__).parent / "data/assets/uniprot_ids.txt",
+        required=False,
+        help="class labels for training instances",
+    )
     psap_predict.add_argument(
         "-f",
         "--fasta",
@@ -98,6 +105,7 @@ def main():
         train(
             path=args.fasta,
             prefix=Path(args.out).stem,
+            labels=args.labels,
             out_dir=args.out,
         )
     elif args.command == "predict":

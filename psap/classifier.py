@@ -13,8 +13,8 @@ from pathlib import Path
 from .matrix import MakeMatrix
 
 
-def annotate(df, identifier_name):
-    with open(Path(__file__).parent / "data/assets/uniprot_ids.txt") as f:
+def annotate(df, identifier_name, labels):
+    with open(labels) as f:
         uniprot_ids = [line.rstrip() for line in f]
     df[identifier_name] = 0
     for prot_id in uniprot_ids:
@@ -24,7 +24,7 @@ def annotate(df, identifier_name):
     return df
 
 
-def export_matrix(name, fasta_path, out_path):
+def export_matrix(name, labels, fasta_path, out_path):
     # Change pathing
     """Generates and saves a file which contains features of a protein sequence.
     Parameters:
@@ -36,7 +36,7 @@ def export_matrix(name, fasta_path, out_path):
     now = datetime.datetime.now()
     date = str(now.day) + "-" + str(now.month) + "-" + str(now.year)
     print("Adding labels to df")
-    df_ann = annotate(data.df, class_col)
+    df_ann = annotate(data.df, class_col, labels)
     # Write data frame to csv
     out_dir = Path(out_path)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -234,7 +234,7 @@ def cval(path, prefix, out_dir=""):
     prediction.to_csv(f"{out_dir}/prediction_{prefix}.csv")
 
 
-def train(path, prefix="", out_dir=""):
+def train(path, prefix="", labels="", out_dir=""):
     """
     ----
     path: str
@@ -245,7 +245,7 @@ def train(path, prefix="", out_dir=""):
         path to create output folder.
     """
     print("annotating fasta")
-    data = export_matrix(name=prefix, fasta_path=path, out_path=out_dir)
+    data = export_matrix(name=prefix, fasta_path=path, labels=labels, out_path=out_dir)
     data_ps = preprocess_and_scaledata(data, "llps")
     data_numeric = data_ps.select_dtypes([np.number])
     X = data_numeric.drop("llps", axis=1)
