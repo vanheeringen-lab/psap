@@ -290,7 +290,6 @@ def predict(
         path to create output folder.
     """
     print("Loading model")
-    print(model)
     if model is None:
         model = Path(__file__).parent / "data/model/UP000005640_9606_llps.json"
     if labels is None:
