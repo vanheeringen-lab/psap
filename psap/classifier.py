@@ -56,9 +56,9 @@ def preprocess_and_scaledata(data, ccol):
                     Scaled and centered data
     """
     try:
-        data = data.drop(["uniprot_id", "PRDaa"], axis=1)
+        data = data.drop(["uniprot_id", "PRDaa", "HydroPhobicIndex"], axis=1)
     except KeyError:
-        data = data.drop(["uniprot_id"], axis=1)
+        data = data.drop(["uniprot_id", "HydroPhobicIndex"], axis=1)
     data = data.fillna(value=0)
     print(
         "Number of phase separating proteins in dataset: "
