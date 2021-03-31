@@ -81,6 +81,13 @@ def main():
         required=True,
         help="Output directory for prediction results",
     )
+    psap_predict.add_argument(
+        "-l",
+        "--labels",
+        default=Path(__file__).parent / "data/assets/uniprot_ids.txt",
+        required=False,
+        help="class labels for training instances",
+    )
     psap_cval.add_argument(
         "-f",
         "--fasta",
@@ -117,6 +124,7 @@ def main():
             path=args.fasta,
             model=args.model,
             prefix=Path(args.out).stem,
+            labels=args.labels,
             out_dir=args.out,
         )
     elif args.command == "cval":

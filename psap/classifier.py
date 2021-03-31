@@ -264,7 +264,7 @@ def train(path, prefix="", labels="", out_dir=""):
     skljson.to_json(clf, out_dir / f"psap_model_{prefix}.json")
 
 
-def predict(path, model, prefix="", out_dir=""):
+def predict(path="", model="", prefix="", labels="", out_dir=""):
     """
     ----
     path: str
@@ -283,7 +283,7 @@ def predict(path, model, prefix="", out_dir=""):
     except:
         print("An error occured while importing the model from json")
     print("annotating fasta")
-    data = export_matrix(name=prefix, fasta_path=path, out_path=out_dir)
+    data = export_matrix(name=prefix, fasta_path=path, labels=labels, out_path=out_dir)
     # Preprocessing
     data_ps = preprocess_and_scaledata(data, "llps")
     data_numeric = data_ps.select_dtypes([np.number])
