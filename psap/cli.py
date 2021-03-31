@@ -95,7 +95,11 @@ def main():
         required=True,
         help="Output directory for prediction results",
     )
-    args = parser.parse_args()
+    try:
+        args = parser.parse_args()
+    except SystemExit:
+        parser.print_help()
+
     # Pickle training-set
     if args.command == "annotate":
         export_matrix(
@@ -122,7 +126,8 @@ def main():
             out_dir=args.out,
         )
     else:
-        print("Incorrect subparser selected")
+        print("Incorrect command-line parameters provided")
+        parser.print_help()
 
 
 if __name__ == "__main__":
