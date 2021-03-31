@@ -273,9 +273,9 @@ def train(
 
 def predict(
     path="",
-    model=Path(__file__).parent / "data/model/UP000005640_9606_llps.json",
+    model=None,
     prefix="",
-    labels=Path(__file__).parent / "data/assets/uniprot_ids.txt",
+    labels=None,
     out_dir="",
 ):
     """
