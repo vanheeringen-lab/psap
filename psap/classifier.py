@@ -234,7 +234,12 @@ def cval(path, prefix, out_dir=""):
     prediction.to_csv(f"{out_dir}/prediction_{prefix}.csv")
 
 
-def train(path, prefix="", labels="", out_dir=""):
+def train(
+    path,
+    prefix="",
+    labels=None,
+    out_dir="",
+):
     """
     ----
     path: str
@@ -245,6 +250,8 @@ def train(path, prefix="", labels="", out_dir=""):
         path to create output folder.
     """
     print("annotating fasta")
+    if labels is not None:
+        labels = Path(__file__).parent / "data/assets/uniprot_ids.txt"
     data = export_matrix(name=prefix, fasta_path=path, labels=labels, out_path=out_dir)
     data_ps = preprocess_and_scaledata(data, "llps")
     data_numeric = data_ps.select_dtypes([np.number])
@@ -264,7 +271,13 @@ def train(path, prefix="", labels="", out_dir=""):
     skljson.to_json(clf, out_dir / f"psap_model_{prefix}.json")
 
 
-def predict(path="", model="", prefix="", labels="", out_dir=""):
+def predict(
+    path="",
+    model=Path(__file__).parent / "data/model/UP000005640_9606_llps.json",
+    prefix="",
+    labels=Path(__file__).parent / "data/assets/uniprot_ids.txt",
+    out_dir="",
+):
     """
     ----
     path: str
@@ -278,8 +291,14 @@ def predict(path="", model="", prefix="", labels="", out_dir=""):
     """
     print("Loading model")
     print(model)
-    clf = skljson.from_json(model)
-    print("annotating fasta")
+    if model is not None:
+        model = Path(__file__).parent / "data/model/UP000005640_9606_llps.json"
+    if labels is not None:
+        labels = Path(__file__).parent / "data/assets/uniprot_ids.txt"
+    try:
+        clf = skljson.from_json(model)
+    except Exception:
+        print("An error occured while loading the model from json")
     data = export_matrix(name=prefix, fasta_path=path, labels=labels, out_path=out_dir)
     # Preprocessing
     data_ps = preprocess_and_scaledata(data, "llps")

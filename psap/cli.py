@@ -56,7 +56,7 @@ def main():
     psap_train.add_argument(
         "-l",
         "--labels",
-        default=Path(__file__).parent / "data/assets/uniprot_ids.txt",
+        default=None,
         required=False,
         help="class labels for training instances",
     )
@@ -70,7 +70,6 @@ def main():
     psap_predict.add_argument(
         "-m",
         "--model",
-        default=Path(__file__).parent / "data/model/UP000005640_9606_llps.json",
         required=False,
         help="Path to serialized RandomForest model",
     )
@@ -84,7 +83,7 @@ def main():
     psap_predict.add_argument(
         "-l",
         "--labels",
-        default=Path(__file__).parent / "data/assets/uniprot_ids.txt",
+        default=None,
         required=False,
         help="class labels for training instances",
     )
