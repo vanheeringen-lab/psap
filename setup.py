@@ -39,6 +39,7 @@ setup(
     name="psap",
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
+    install_requires=requirements,
     packages=find_packages(include=["psap", "psap.*"]),
     include_package_data=True,
     url="https://github.com/tilschaef/psap",
