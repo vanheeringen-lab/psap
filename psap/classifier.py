@@ -278,6 +278,7 @@ def predict(path="", model="", prefix="", labels="", out_dir=""):
     """
     print("Loading model")
     print(model)
+    clf = None
     try:
         clf = skljson.from_json(model)
     except:
