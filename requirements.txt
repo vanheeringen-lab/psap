@@ -8,3 +8,4 @@ tqdm>=4.38.0
 seaborn>=0.11.1
 matplotlib>=3.3.4 
 sklearn-json>=0.1.0
+versioneer>=0.19

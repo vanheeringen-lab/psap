@@ -102,13 +102,13 @@ def main():
         required=True,
         help="Output directory for prediction results",
     )
-    try:
-        args = parser.parse_args()
-    except SystemExit:
+    args = parser.parse_args()
+    # Pickle training-set
+    if args.command not in ["train", "predict", "annotate", "cval"]:
         parser.print_help()
 
-    # Pickle training-set
     if args.command == "annotate":
+        print("test")
         export_matrix(
             name=Path(args.fasta).stem, fasta_path=args.fasta, out_path=args.out
         )
@@ -133,9 +133,6 @@ def main():
             prefix=Path(args.out).stem,
             out_dir=args.out,
         )
-    else:
-        print("Incorrect command-line parameters provided")
-        parser.print_help()
 
 
 if __name__ == "__main__":
