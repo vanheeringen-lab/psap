@@ -108,7 +108,6 @@ def main():
         parser.print_help()
 
     if args.command == "annotate":
-        print("test")
         export_matrix(
             name=Path(args.fasta).stem, fasta_path=args.fasta, out_path=args.out
         )
