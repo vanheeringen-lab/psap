@@ -253,10 +253,11 @@ def train(
     if labels is None:
         labels = Path(__file__).parent / "data/assets/uniprot_ids.txt"
     data = export_matrix(name=prefix, fasta_path=path, labels=labels, out_path=out_dir)
-    data_ps = preprocess_and_scaledata(data, "llps")
-    data_numeric = data_ps.select_dtypes([np.number])
-    X = data_numeric.drop("llps", axis=1)
-    y = data_numeric["llps"]
+    data_filtered = data.select_dtypes([np.number])
+    X = data_filtered.drop("llps", axis=1)
+    y = data_filtered["llps"]
+    # data_ps = preprocess_and_scaledata(data, "llps")
+    # data_numeric = data_ps.select_dtypes([np.number])
     clf = RandomForestClassifier(
         n_jobs=32,
         class_weight="balanced",
@@ -300,10 +301,11 @@ def predict(
         print("An error occured while loading the model from json")
     data = export_matrix(name=prefix, fasta_path=path, labels=labels, out_path=out_dir)
     # Preprocessing
-    data_ps = preprocess_and_scaledata(data, "llps")
-    data_numeric = data_ps.select_dtypes([np.number])
-    X = data_numeric.drop("llps", axis=1)
-    y = data_numeric["llps"]
+    data_filtered = data.select_dtypes([np.number])
+    X = data_filtered.drop("llps", axis=1)
+    y = data_filtered["llps"]
+    # data_ps = preprocess_and_scaledata(data, "llps")
+    # data_numeric = data_ps.select_dtypes([np.number])
     psap_prediction = pd.DataFrame(index=data["protein_name"])
     psap_prediction["PSAP_score"] = clf.predict_proba(X)[:, 1]
     psap_prediction["llps"] = y.values
