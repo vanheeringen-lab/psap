@@ -237,7 +237,7 @@ def cval(path, prefix, out_dir=""):
 def train(
     path,
     prefix="",
-    labels=Path(__file__).parent / "data/assets/uniprot_ids.txt",
+    labels=None,
     out_dir="",
 ):
     """
@@ -250,6 +250,8 @@ def train(
         path to create output folder.
     """
     print("annotating fasta")
+    if labels is None:
+        labels = Path(__file__).parent / "data/assets/uniprot_ids.txt"
     data = export_matrix(name=prefix, fasta_path=path, labels=labels, out_path=out_dir)
     data_ps = preprocess_and_scaledata(data, "llps")
     data_numeric = data_ps.select_dtypes([np.number])
@@ -271,9 +273,9 @@ def train(
 
 def predict(
     path="",
-    model=Path(__file__).parent / "data/model/UP000005640_9606_llps.json",
+    model=None,
     prefix="",
-    labels=Path(__file__).parent / "data/assets/uniprot_ids.txt",
+    labels=None,
     out_dir="",
 ):
     """
@@ -288,6 +290,10 @@ def predict(
         path to create output folder.
     """
     print("Loading model")
+    if model is None:
+        model = Path(__file__).parent / "data/model/UP000005640_9606_llps.json"
+    if labels is None:
+        labels = Path(__file__).parent / "data/assets/uniprot_ids.txt"
     try:
         clf = skljson.from_json(model)
     except Exception:
