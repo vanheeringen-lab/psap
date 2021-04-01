@@ -33,6 +33,13 @@ def main():
         help="Path to peptide fasta file",
     )
     psap_annotate.add_argument(
+        "-l",
+        "--labels",
+        default=None,
+        required=False,
+        help=".txt file with llps uniprot ids (positive training labels)",
+    )
+    psap_annotate.add_argument(
         "-o",
         "--out",
         default="~",
@@ -108,7 +115,10 @@ def main():
 
     if args.command == "annotate":
         export_matrix(
-            name=Path(args.fasta).stem, fasta_path=args.fasta, out_path=args.out
+            name=Path(args.fasta).stem,
+            fasta_path=args.fasta,
+            labels=args.labels,
+            out_path=args.out,
         )
     elif args.command == "train":
         train(
