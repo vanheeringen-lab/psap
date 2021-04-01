@@ -24,13 +24,15 @@ def annotate(df, identifier_name, labels):
     return df
 
 
-def export_matrix(name, labels, fasta_path, out_path):
+def export_matrix(name, labels=None, fasta_path, out_path):
     # Change pathing
     """Generates and saves a file which contains features of a protein sequence.
     Parameters:
         name: Name of the file.
         fasta_path: Path of the fasta file which needs to be featured.
     """
+    if labels is None:
+        labels = Path(__file__).parent / "data/assets/uniprot_ids.txt"
     class_col = "llps"
     data = MakeMatrix(fasta_path)
     now = datetime.datetime.now()
@@ -250,8 +252,6 @@ def train(
         path to create output folder.
     """
     print("annotating fasta")
-    if labels is None:
-        labels = Path(__file__).parent / "data/assets/uniprot_ids.txt"
     data = export_matrix(name=prefix, fasta_path=path, labels=labels, out_path=out_dir)
     data_ps = preprocess_and_scaledata(data, "llps")
     data_numeric = data_ps.select_dtypes([np.number])
@@ -292,8 +292,6 @@ def predict(
     print("Loading model")
     if model is None:
         model = Path(__file__).parent / "data/model/UP000005640_9606_llps.json"
-    if labels is None:
-        labels = Path(__file__).parent / "data/assets/uniprot_ids.txt"
     try:
         clf = skljson.from_json(model)
     except Exception:
