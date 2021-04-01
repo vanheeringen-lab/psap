@@ -18,7 +18,7 @@ def main():
     )
     psap_annotate = subparsers.add_parser(
         "annotate",
-        help="adds biochemical features to a set of protein sequences in fasta format and writes it to a serialized data frame",
+        help="adds biochemical features to a set of protein sequences in fasta format and writes it to a csv file",
     )
     psap_train = subparsers.add_parser("train", help="train psap model")
     psap_predict = subparsers.add_parser("predict", help="predict classes")
