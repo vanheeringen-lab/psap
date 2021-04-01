@@ -13,7 +13,12 @@ psap
         :target: https://psap-cli.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-CLI interface for the PSAP classifier, Mierlo, G. van. Predicting protein condensate formation using machine learning (Manuscript in Preparation).
+CLI interface for the PSAP classifier. PSAP implements a RandomForest approach to predict the probability of proteins to mediate protein phase separation (PPS). Initially, a set of protein sequences is annotated with biochemical features wich are subsequently used to train a RandomForest (scikit-learn) classifier. The trained classifier is exported to json format and can be used to predict the llps class probability (PSAP_score) for new samples. 
+
+The default model was trained on the `human reference proteome <ftp://ftp.ebi.ac.uk/pub/databases/reference_proteomes/QfO/Eukaryota/UP000005640_9606.fasta.gz>`_ with a list of literature curated PPS proteins for positive class labeling. Both can be found in /data.   
+
+**Publication**
+| Mierlo, G., Jansen, J. R. G., Wang, J., Poser, I., van Heeringen, S. J., & Vermeulen, M. (2021). Predicting protein condensate formation using machine learning. Cell Reports, 34(5), 108705. https://doi.org/10.1016/j.celrep.2021.108705.
 
 
 * Free software: MIT license
@@ -33,22 +38,22 @@ Getting Started
 --------
 .. code-block:: python
 
-   psap train -f /path/to/peptide-trainingset.fasta  -o /output/directory  
+   psap train -f /path/to/peptide-trainingset.fasta -l /path/top/known/pps-proteins.txt (optional)  -o /output/directory   
 The trained RandomForest classifier is exported to json format and stored in the output directory.
 
 3. *Predict llps score for peptide instances*
 --------
 .. code-block:: python
 
-   psap predict -m /path/to/model.json -f /path/to/peptid-testset.fasta -o /output/directory
+   psap predict -f /path/to/peptid-testset.fasta -m /path/to/model.json (optional) -l /path/top/known/pps-proteins.txt (optional)  -o /output/directory
    
-When no model is provided (-m) psap loads the default classifier stored in /data/model.
+When no model (-m) and pps labels (-l) are provided psap loads the default classifier and pps labels stored in /data/model.
 
 4. *Annotate petides (optional)*
 --------
 .. code-block:: python
 
-   psap annotate -f /path/to/peptide.fasta -o /output/directory    
+   psap annotate -f /path/to/peptide.fasta  -l /path/top/known/pps-proteins.txt (optional) -o /output/directory    
 
 Annotates a peptide fasta with biochemical features. This step is included in train and predict.
 
