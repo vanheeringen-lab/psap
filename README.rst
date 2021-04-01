@@ -53,7 +53,7 @@ When no model (-m) and pps labels (-l) are provided psap loads the default class
 --------
 .. code-block:: python
 
-   psap annotate -f /path/to/peptide.fasta -o /output/directory    
+   psap annotate -f /path/to/peptide.fasta  -l /path/top/known/pps-proteins (optional) -o /output/directory    
 
 Annotates a peptide fasta with biochemical features. This step is included in train and predict.
 
