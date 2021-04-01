@@ -37,7 +37,7 @@ def main():
         "--out",
         default="~",
         required=False,
-        help="Output directory for annotated and serialized (pkl) data frame",
+        help="Output directory to store annotated data frame in .csv format",
     )
     psap_train.add_argument(
         "-f",
@@ -51,14 +51,14 @@ def main():
         "--out",
         default=None,
         required=True,
-        help="Output directory for trained and serialized RandomForest classifier",
+        help="Output directory to store trained RandomForest classifier in json format",
     )
     psap_train.add_argument(
         "-l",
         "--labels",
         default=None,
         required=False,
-        help="class labels for training instances",
+        help=".txt file with llps uniprot ids (positive training labels)",
     )
     psap_predict.add_argument(
         "-f",
@@ -71,21 +71,21 @@ def main():
         "-m",
         "--model",
         required=False,
-        help="Path to serialized RandomForest model",
+        help="Path to RandomForest model in json format",
     )
     psap_predict.add_argument(
         "-o",
         "--out",
         default=None,
         required=True,
-        help="Output directory for prediction results",
+        help="Output directory for psap prediction results",
     )
     psap_predict.add_argument(
         "-l",
         "--labels",
         default=None,
         required=False,
-        help="class labels for training instances",
+        help=".txt file with llps uniprot ids (positive training labels)",
     )
     psap_cval.add_argument(
         "-f",
