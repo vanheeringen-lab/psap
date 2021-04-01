@@ -13,8 +13,7 @@ with open("requirements.txt") as f:
 
 
 setup(
-    author="Tilman Schaefers",
-    author_email="tilman.schaefers@ru.nl",
+    author=["Juriaan Jansen", "Tilman Schaefers <tilman.schaefers@ru.nl>"],
     python_requires=">=3.7",
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
