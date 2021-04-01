@@ -289,10 +289,10 @@ def predict(
     out_dir:
         path to create output folder.
     """
-    print(f"Loading model:{model}")
     if model is None:
         model = Path(__file__).parent / "data/model/UP000005640_9606_llps.json"
     try:
+        print(f"Loading model:{model}")
         clf = skljson.from_json(model)
     except Exception:
         print("An error occured while loading the model from json")
