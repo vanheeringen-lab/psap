@@ -13,7 +13,7 @@ psap
         :target: https://psap-cli.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-CLI interface for the PSAP classifier. PSAP implements a RandomForest approach to predict the probability of proteins to mediate protein phase separation (PPS). Initially, a set of protein sequences is annotated with biochemical features wich are subsequently used to train a RandomForest (scikit-learn) classifier. The trained classifier is exported to json format and can be used to predict the llps class probability (PSAP_score) for new samples. The default model was trained on the human reference proteome `LUP000005640_9606`<ftp://ftp.ebi.ac.uk/pub/databases/reference_proteomes/QfO/Eukaryota/UP000005640_9606.fasta.gz>_ and is included in the installation.  
+CLI interface for the PSAP classifier. PSAP implements a RandomForest approach to predict the probability of proteins to mediate protein phase separation (PPS). Initially, a set of protein sequences is annotated with biochemical features wich are subsequently used to train a RandomForest (scikit-learn) classifier. The trained classifier is exported to json format and can be used to predict the llps class probability (PSAP_score) for new samples. The default model was trained on the human reference proteome `LUP000005640_9606<ftp://ftp.ebi.ac.uk/pub/databases/reference_proteomes/QfO/Eukaryota/UP000005640_9606.fasta.gz>`_ and is included in the installation.  
 
 **Publication**
 | Mierlo, G., Jansen, J. R. G., Wang, J., Poser, I., van Heeringen, S. J., & Vermeulen, M. (2021). Predicting protein condensate formation using machine learning. Cell Reports, 34(5), 108705. https://doi.org/10.1016/j.celrep.2021.108705.
