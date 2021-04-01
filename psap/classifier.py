@@ -24,7 +24,7 @@ def annotate(df, identifier_name, labels):
     return df
 
 
-def export_matrix(name, labels=None, fasta_path, out_path):
+def export_matrix(name, labels=None, fasta_pat=""h, out_path=""):
     # Change pathing
     """Generates and saves a file which contains features of a protein sequence.
     Parameters:
