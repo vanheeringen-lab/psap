@@ -13,8 +13,8 @@ from pathlib import Path
 from .matrix import MakeMatrix
 
 
-def annotate(df, identifier_name):
-    with open(Path(__file__).parent / "data/assets/uniprot_ids.txt") as f:
+def annotate(df, identifier_name, labels):
+    with open(labels) as f:
         uniprot_ids = [line.rstrip() for line in f]
     df[identifier_name] = 0
     for prot_id in uniprot_ids:
@@ -24,19 +24,21 @@ def annotate(df, identifier_name):
     return df
 
 
-def export_matrix(name, fasta_path, out_path):
+def export_matrix(name, labels=None, fasta_path="", out_path=""):
     # Change pathing
     """Generates and saves a file which contains features of a protein sequence.
     Parameters:
         name: Name of the file.
         fasta_path: Path of the fasta file which needs to be featured.
     """
+    if labels is None:
+        labels = Path(__file__).parent / "data/assets/uniprot_ids.txt"
     class_col = "llps"
     data = MakeMatrix(fasta_path)
     now = datetime.datetime.now()
     date = str(now.day) + "-" + str(now.month) + "-" + str(now.year)
     print("Adding labels to df")
-    df_ann = annotate(data.df, class_col)
+    df_ann = annotate(data.df, class_col, labels)
     # Write data frame to csv
     out_dir = Path(out_path)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -56,9 +58,9 @@ def preprocess_and_scaledata(data, ccol):
                     Scaled and centered data
     """
     try:
-        data = data.drop(["uniprot_id", "PRDaa"], axis=1)
+        data = data.drop(["uniprot_id", "PRDaa", "HydroPhobicIndex"], axis=1)
     except KeyError:
-        data = data.drop(["uniprot_id"], axis=1)
+        data = data.drop(["uniprot_id", "HydroPhobicIndex"], axis=1)
     data = data.fillna(value=0)
     print(
         "Number of phase separating proteins in dataset: "
@@ -234,7 +236,12 @@ def cval(path, prefix, out_dir=""):
     prediction.to_csv(f"{out_dir}/prediction_{prefix}.csv")
 
 
-def train(path, prefix="", out_dir=""):
+def train(
+    path,
+    prefix="",
+    labels=None,
+    out_dir="",
+):
     """
     ----
     path: str
@@ -245,7 +252,7 @@ def train(path, prefix="", out_dir=""):
         path to create output folder.
     """
     print("annotating fasta")
-    data = export_matrix(name=prefix, fasta_path=path, out_path=out_dir)
+    data = export_matrix(name=prefix, fasta_path=path, labels=labels, out_path=out_dir)
     data_ps = preprocess_and_scaledata(data, "llps")
     data_numeric = data_ps.select_dtypes([np.number])
     X = data_numeric.drop("llps", axis=1)
@@ -264,7 +271,13 @@ def train(path, prefix="", out_dir=""):
     skljson.to_json(clf, out_dir / f"psap_model_{prefix}.json")
 
 
-def predict(path, model, prefix="", out_dir=""):
+def predict(
+    path="",
+    model=None,
+    prefix="",
+    labels=None,
+    out_dir="",
+):
     """
     ----
     path: str
@@ -276,14 +289,14 @@ def predict(path, model, prefix="", out_dir=""):
     out_dir:
         path to create output folder.
     """
-    print("Loading model")
-    print(model)
+    if model is None:
+        model = Path(__file__).parent / "data/model/UP000005640_9606_llps.json"
     try:
+        print(f"Loading model:{model}")
         clf = skljson.from_json(model)
-    except:
-        print("An error occured while importing the model from json")
-    print("annotating fasta")
-    data = export_matrix(name=prefix, fasta_path=path, out_path=out_dir)
+    except Exception:
+        print("An error occured while loading the model from json")
+    data = export_matrix(name=prefix, fasta_path=path, labels=labels, out_path=out_dir)
     # Preprocessing
     data_ps = preprocess_and_scaledata(data, "llps")
     data_numeric = data_ps.select_dtypes([np.number])

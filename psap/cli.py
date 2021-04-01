@@ -18,7 +18,7 @@ def main():
     )
     psap_annotate = subparsers.add_parser(
         "annotate",
-        help="adds biochemical features to a set of protein sequences in fasta format and writes it to a serialized data frame",
+        help="adds biochemical features to a set of protein sequences in fasta format and writes it to a csv file",
     )
     psap_train = subparsers.add_parser("train", help="train psap model")
     psap_predict = subparsers.add_parser("predict", help="predict classes")
@@ -33,11 +33,18 @@ def main():
         help="Path to peptide fasta file",
     )
     psap_annotate.add_argument(
+        "-l",
+        "--labels",
+        default=None,
+        required=False,
+        help=".txt file with llps uniprot ids (positive training labels)",
+    )
+    psap_annotate.add_argument(
         "-o",
         "--out",
         default="~",
         required=False,
-        help="Output directory for annotated and serialized (pkl) data frame",
+        help="Output directory to store annotated data frame in .csv format",
     )
     psap_train.add_argument(
         "-f",
@@ -51,7 +58,14 @@ def main():
         "--out",
         default=None,
         required=True,
-        help="Output directory for trained and serialized RandomForest classifier",
+        help="Output directory to store trained RandomForest classifier in json format",
+    )
+    psap_train.add_argument(
+        "-l",
+        "--labels",
+        default=None,
+        required=False,
+        help=".txt file with llps uniprot ids (positive training labels)",
     )
     psap_predict.add_argument(
         "-f",
@@ -63,16 +77,22 @@ def main():
     psap_predict.add_argument(
         "-m",
         "--model",
-        default=Path(__file__).parent / "data/model/UP000005640_9606_llps.json",
         required=False,
-        help="Path to serialized RandomForest model",
+        help="Path to RandomForest model in json format",
     )
     psap_predict.add_argument(
         "-o",
         "--out",
         default=None,
         required=True,
-        help="Output directory for prediction results",
+        help="Output directory for psap prediction results",
+    )
+    psap_predict.add_argument(
+        "-l",
+        "--labels",
+        default=None,
+        required=False,
+        help=".txt file with llps uniprot ids (positive training labels)",
     )
     psap_cval.add_argument(
         "-f",
@@ -90,14 +110,21 @@ def main():
     )
     args = parser.parse_args()
     # Pickle training-set
+    if args.command not in ["train", "predict", "annotate", "cval"]:
+        parser.print_help()
+
     if args.command == "annotate":
         export_matrix(
-            name=Path(args.fasta).stem, fasta_path=args.fasta, out_path=args.out
+            name=Path(args.fasta).stem,
+            fasta_path=args.fasta,
+            labels=args.labels,
+            out_path=args.out,
         )
     elif args.command == "train":
         train(
             path=args.fasta,
             prefix=Path(args.out).stem,
+            labels=args.labels,
             out_dir=args.out,
         )
     elif args.command == "predict":
@@ -105,6 +132,7 @@ def main():
             path=args.fasta,
             model=args.model,
             prefix=Path(args.out).stem,
+            labels=args.labels,
             out_dir=args.out,
         )
     elif args.command == "cval":
@@ -113,8 +141,6 @@ def main():
             prefix=Path(args.out).stem,
             out_dir=args.out,
         )
-    else:
-        print("Incorrect subparser selected")
 
 
 if __name__ == "__main__":
