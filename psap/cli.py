@@ -132,7 +132,6 @@ def main():
             path=args.fasta,
             model=args.model,
             prefix=Path(args.out).stem,
-            labels=args.labels,
             out_dir=args.out,
         )
     elif args.command == "cval":
