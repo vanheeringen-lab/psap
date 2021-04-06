@@ -248,11 +248,14 @@ def train(
     print("annotating fasta")
     mat = export_matrix(name=prefix, fasta_path=path, out_path=out_dir)
     data = annotate(mat.df, labels=labels)
+    y = data["llps"]
     data_ps = preprocess_and_scaledata(data)
-    data_ps["llps"] = data["llps"]
+    # re-add class column after scaling
+    data_ps["llps"] = y
     data_numeric = data_ps.select_dtypes([np.number])
     X = data_numeric.drop("llps", axis=1)
     y = data_numeric["llps"]
+    # train random forest classifier
     clf = RandomForestClassifier(
         n_jobs=32,
         class_weight="balanced",
@@ -295,8 +298,6 @@ def predict(
     # Preprocessing
     data_ps = preprocess_and_scaledata(mat.df)
     X = data_ps.select_dtypes([np.number])
-    # X = data_numeric.drop("llps", axis=1)
-    # y = data_numeric["llps"]
     psap_prediction = pd.DataFrame(index=data_ps["protein_name"])
     psap_prediction["PSAP_score"] = clf.predict_proba(X)[:, 1]
     psap_prediction["rank"] = 0
