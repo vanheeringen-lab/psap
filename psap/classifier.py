@@ -44,7 +44,7 @@ def export_matrix(name="", fasta_path="", out_path=""):
     return data
 
 
-def preprocess_and_scaledata(data, ccol):
+def preprocess_and_scaledata(data, ccol="llps"):
     """
     Wrapper for preprocess_data. Performs Min/Max scaling and centering of a dataset.
     ----------
@@ -60,10 +60,11 @@ def preprocess_and_scaledata(data, ccol):
     except KeyError:
         data = data.drop(["uniprot_id", "HydroPhobicIndex"], axis=1)
     data = data.fillna(value=0)
-    print(
-        "Number of phase separating proteins in dataset: "
-        + str(data.loc[data[ccol] == 1].shape[0])
-    )
+    if ccol in data.columns:
+        print(
+            "Number of phase separating proteins in dataset: "
+            + str(data.loc[data[ccol] == 1].shape[0])
+        )
     scaler = MinMaxScaler()
     df = data.copy()
     processed_data = df.fillna(0)
