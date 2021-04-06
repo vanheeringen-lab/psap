@@ -44,7 +44,7 @@ def export_matrix(name="", fasta_path="", out_path=""):
     return data
 
 
-def preprocess_and_scaledata(data, ccol="llps"):
+def preprocess_and_scaledata(data):
     """
     Wrapper for preprocess_data. Performs Min/Max scaling and centering of a dataset.
     ----------
@@ -60,29 +60,24 @@ def preprocess_and_scaledata(data, ccol="llps"):
     except KeyError:
         data = data.drop(["uniprot_id", "HydroPhobicIndex"], axis=1)
     data = data.fillna(value=0)
-    if ccol in data.columns:
-        print(
-            "Number of phase separating proteins in dataset: "
-            + str(data.loc[data[ccol] == 1].shape[0])
-        )
     scaler = MinMaxScaler()
     df = data.copy()
     processed_data = df.fillna(0)
-    processed_data = preprocess_data(processed_data, scaler, ccol)
+    processed_data = preprocess_data(processed_data, scaler)
     # processed_data = remove_correlating_features(processed_data, cutoff=.95)
     # processed_data = remove_low_variance_features(processed_data, variance_cutoff=0.08)
     return processed_data
 
 
-def preprocess_data(df, scaler, ccol):
+def preprocess_data(df, scaler):
     info = df.select_dtypes(include=["object"])
-    y = df[ccol]
-    X = df.drop([ccol], axis=1)
-    X = X._get_numeric_data()
+    # y = df[ccol]
+    # X = df.drop([ccol], axis=1)
+    X = df._get_numeric_data()
     columns = X.columns
     X = scaler.fit_transform(X)
     X = pd.DataFrame(X, columns=columns)
-    X[ccol] = y
+    # X[ccol] = y
     X = X.merge(info, how="outer", left_index=True, right_index=True)
     return X
 
@@ -253,7 +248,8 @@ def train(
     print("annotating fasta")
     mat = export_matrix(name=prefix, fasta_path=path, out_path=out_dir)
     data = annotate(mat.df, labels=labels)
-    data_ps = preprocess_and_scaledata(data, "llps")
+    data_ps = preprocess_and_scaledata(data)
+    data_ps['llps'] = data["llps"]
     data_numeric = data_ps.select_dtypes([np.number])
     X = data_numeric.drop("llps", axis=1)
     y = data_numeric["llps"]
