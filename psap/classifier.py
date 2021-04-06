@@ -13,40 +13,38 @@ from pathlib import Path
 from .matrix import MakeMatrix
 
 
-def annotate(df, identifier_name, labels):
+def annotate(df, labels=None):
+    if labels is None:
+        labels = Path(__file__).parent / "data/assets/uniprot_ids.txt"
     with open(labels) as f:
         uniprot_ids = [line.rstrip() for line in f]
-    df[identifier_name] = 0
+    df["llps"] = 0
+    print("Adding labels to df")
     for prot_id in uniprot_ids:
-        df.loc[df["uniprot_id"] == prot_id, identifier_name] = 1
+        df.loc[df["uniprot_id"] == prot_id, "llps"] = 1
         if (len(df.loc[df["uniprot_id"] == prot_id])) == 0:
             print(prot_id + " is not found.")
     return df
 
 
-def export_matrix(name, labels=None, fasta_path="", out_path=""):
+def export_matrix(prefix="", fasta_path="", out_path=""):
     # Change pathing
     """Generates and saves a file which contains features of a protein sequence.
     Parameters:
         name: Name of the file.
         fasta_path: Path of the fasta file which needs to be featured.
     """
-    if labels is None:
-        labels = Path(__file__).parent / "data/assets/uniprot_ids.txt"
-    class_col = "llps"
     data = MakeMatrix(fasta_path)
     now = datetime.datetime.now()
     date = str(now.day) + "-" + str(now.month) + "-" + str(now.year)
-    print("Adding labels to df")
-    df_ann = annotate(data.df, class_col, labels)
     # Write data frame to csv
     out_dir = Path(out_path)
     out_dir.mkdir(parents=True, exist_ok=True)
-    df_ann.to_csv(out_dir / f"{name}_{class_col}_{date}_ann.csv")
-    return df_ann
+    data.df.to_csv(out_dir / f"{prefix}_psap_matrix_{date}.csv")
+    return data
 
 
-def preprocess_and_scaledata(data, ccol):
+def preprocess_and_scaledata(data):
     """
     Wrapper for preprocess_data. Performs Min/Max scaling and centering of a dataset.
     ----------
@@ -62,28 +60,21 @@ def preprocess_and_scaledata(data, ccol):
     except KeyError:
         data = data.drop(["uniprot_id", "HydroPhobicIndex"], axis=1)
     data = data.fillna(value=0)
-    print(
-        "Number of phase separating proteins in dataset: "
-        + str(data.loc[data[ccol] == 1].shape[0])
-    )
     scaler = MinMaxScaler()
     df = data.copy()
     processed_data = df.fillna(0)
-    processed_data = preprocess_data(processed_data, scaler, ccol)
+    processed_data = preprocess_data(processed_data, scaler)
     # processed_data = remove_correlating_features(processed_data, cutoff=.95)
     # processed_data = remove_low_variance_features(processed_data, variance_cutoff=0.08)
     return processed_data
 
 
-def preprocess_data(df, scaler, ccol):
+def preprocess_data(df, scaler):
     info = df.select_dtypes(include=["object"])
-    y = df[ccol]
-    X = df.drop([ccol], axis=1)
-    X = X._get_numeric_data()
+    X = df._get_numeric_data()
     columns = X.columns
     X = scaler.fit_transform(X)
     X = pd.DataFrame(X, columns=columns)
-    X[ccol] = y
     X = X.merge(info, how="outer", left_index=True, right_index=True)
     return X
 
@@ -218,7 +209,10 @@ def cval(path, prefix, out_dir=""):
         path to create output folder.
     """
     data = pd.read_pickle(path)
-    data_ps = preprocess_and_scaledata(data, "llps")
+    y = data["llps"]
+    data_ps = preprocess_and_scaledata(data)
+    # re-add class column after scaling
+    data_ps["llps"] = y
     clf = RandomForestClassifier(max_depth=12, n_estimators=100)
     prediction, fi_data = predict_proteome(
         data_ps, clf, "llps", testing_size=0.2, remove_training=False
@@ -252,11 +246,16 @@ def train(
         path to create output folder.
     """
     print("annotating fasta")
-    data = export_matrix(name=prefix, fasta_path=path, labels=labels, out_path=out_dir)
-    data_ps = preprocess_and_scaledata(data, "llps")
+    mat = export_matrix(prefix=prefix, fasta_path=path, out_path=out_dir)
+    data = annotate(mat.df, labels=labels)
+    y = data["llps"]
+    data_ps = preprocess_and_scaledata(data)
+    # re-add class column after scaling
+    data_ps["llps"] = y
     data_numeric = data_ps.select_dtypes([np.number])
     X = data_numeric.drop("llps", axis=1)
     y = data_numeric["llps"]
+    # train random forest classifier
     clf = RandomForestClassifier(
         n_jobs=32,
         class_weight="balanced",
@@ -275,7 +274,6 @@ def predict(
     path="",
     model=None,
     prefix="",
-    labels=None,
     out_dir="",
 ):
     """
@@ -296,19 +294,14 @@ def predict(
         clf = skljson.from_json(model)
     except Exception:
         print("An error occured while loading the model from json")
-    data = export_matrix(name=prefix, fasta_path=path, labels=labels, out_path=out_dir)
+    mat = export_matrix(prefix=prefix, fasta_path=path, out_path=out_dir)
     # Preprocessing
-    data_ps = preprocess_and_scaledata(data, "llps")
-    data_numeric = data_ps.select_dtypes([np.number])
-    X = data_numeric.drop("llps", axis=1)
-    y = data_numeric["llps"]
-    psap_prediction = pd.DataFrame(index=data["protein_name"])
+    data_ps = preprocess_and_scaledata(mat.df)
+    X = data_ps.select_dtypes([np.number])
+    psap_prediction = pd.DataFrame(index=data_ps["protein_name"])
     psap_prediction["PSAP_score"] = clf.predict_proba(X)[:, 1]
-    psap_prediction["llps"] = y.values
     psap_prediction["rank"] = 0
-    rank = psap_prediction.loc[psap_prediction["llps"] == 0, "PSAP_score"].rank(
-        ascending=False
-    )
+    rank = psap_prediction["PSAP_score"].rank(ascending=False)
     psap_prediction["rank"] = rank
     # # Make directory for output
     out_dir = Path(out_dir)

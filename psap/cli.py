@@ -3,7 +3,7 @@ import argparse
 import sys
 from pathlib import Path
 import psap
-from psap.classifier import train, predict, cval, export_matrix
+from psap.classifier import annotate, train, predict, cval, export_matrix
 
 
 def main():
@@ -114,12 +114,12 @@ def main():
         parser.print_help()
 
     if args.command == "annotate":
-        export_matrix(
-            name=Path(args.fasta).stem,
+        mat = export_matrix(
+            prefix=Path(args.fasta).stem,
             fasta_path=args.fasta,
-            labels=args.labels,
             out_path=args.out,
         )
+        annotate(mat.df, labels=args.labels)
     elif args.command == "train":
         train(
             path=args.fasta,
@@ -132,7 +132,6 @@ def main():
             path=args.fasta,
             model=args.model,
             prefix=Path(args.out).stem,
-            labels=args.labels,
             out_dir=args.out,
         )
     elif args.command == "cval":
