@@ -40,7 +40,7 @@ def export_matrix(name="", fasta_path="", out_path=""):
     # Write data frame to csv
     out_dir = Path(out_path)
     out_dir.mkdir(parents=True, exist_ok=True)
-    data.to_csv(out_dir / f"{name}_{"psap_matrix"}_{date}.csv")
+    data.to_csv(out_dir / f"{name}_psap_matrix_{date}.csv")
     return data
 
 
