@@ -40,7 +40,7 @@ def export_matrix(name="", fasta_path="", out_path=""):
     # Write data frame to csv
     out_dir = Path(out_path)
     out_dir.mkdir(parents=True, exist_ok=True)
-    data.to_csv(out_dir / f"{name}_{"psap_matrix"l}_{date}.csv")
+    data.to_csv(out_dir / f"{name}_{"psap_matrix"}_{date}.csv")
     return data
 
 
@@ -251,7 +251,6 @@ def train(
     """
     print("annotating fasta")
     data = export_matrix(name=prefix, fasta_path=path, out_path=out_dir)
-    print("here")
     data = annotate(data, labels=labels)
     data_ps = preprocess_and_scaledata(data, "llps")
     data_numeric = data_ps.select_dtypes([np.number])
