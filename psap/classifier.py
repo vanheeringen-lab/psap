@@ -246,7 +246,7 @@ def train(
         path to create output folder.
     """
     print("annotating fasta")
-    mat = export_matrix(name=prefix, fasta_path=path, out_path=out_dir)
+    mat = export_matrix(prefix=prefix, fasta_path=path, out_path=out_dir)
     data = annotate(mat.df, labels=labels)
     y = data["llps"]
     data_ps = preprocess_and_scaledata(data)
@@ -294,7 +294,7 @@ def predict(
         clf = skljson.from_json(model)
     except Exception:
         print("An error occured while loading the model from json")
-    mat = export_matrix(name=prefix, fasta_path=path, out_path=out_dir)
+    mat = export_matrix(prefix=prefix, fasta_path=path, out_path=out_dir)
     # Preprocessing
     data_ps = preprocess_and_scaledata(mat.df)
     X = data_ps.select_dtypes([np.number])
