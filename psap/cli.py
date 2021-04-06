@@ -115,7 +115,7 @@ def main():
 
     if args.command == "annotate":
         mat = export_matrix(
-            name=Path(args.fasta).stem,
+            prefix=Path(args.fasta).stem,
             fasta_path=args.fasta,
             out_path=args.out,
         )
