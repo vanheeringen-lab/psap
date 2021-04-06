@@ -250,8 +250,8 @@ def train(
         path to create output folder.
     """
     print("annotating fasta")
-    data = export_matrix(name=prefix, fasta_path=path, out_path=out_dir)
-    data = annotate(data, labels=labels)
+    mat = export_matrix(name=prefix, fasta_path=path, out_path=out_dir)
+    data = annotate(mat.df, labels=labels)
     data_ps = preprocess_and_scaledata(data, "llps")
     data_numeric = data_ps.select_dtypes([np.number])
     X = data_numeric.drop("llps", axis=1)
