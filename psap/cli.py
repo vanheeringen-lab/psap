@@ -114,12 +114,12 @@ def main():
         parser.print_help()
 
     if args.command == "annotate":
-        df = export_matrix(
+        mat = export_matrix(
             name=Path(args.fasta).stem,
             fasta_path=args.fasta,
             out_path=args.out,
         )
-        annotate(df, labels=args.labels)
+        annotate(mat.df, labels=args.labels)
     elif args.command == "train":
         train(
             path=args.fasta,
