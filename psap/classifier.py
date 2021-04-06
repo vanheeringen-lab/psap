@@ -27,7 +27,7 @@ def annotate(df, labels=None):
     return df
 
 
-def export_matrix(name="", fasta_path="", out_path=""):
+def export_matrix(prefix="", fasta_path="", out_path=""):
     # Change pathing
     """Generates and saves a file which contains features of a protein sequence.
     Parameters:
@@ -40,7 +40,7 @@ def export_matrix(name="", fasta_path="", out_path=""):
     # Write data frame to csv
     out_dir = Path(out_path)
     out_dir.mkdir(parents=True, exist_ok=True)
-    data.df.to_csv(out_dir / f"{name}_psap_matrix_{date}.csv")
+    data.df.to_csv(out_dir / f"{prefix}_psap_matrix_{date}.csv")
     return data
 
 
@@ -71,13 +71,10 @@ def preprocess_and_scaledata(data):
 
 def preprocess_data(df, scaler):
     info = df.select_dtypes(include=["object"])
-    # y = df[ccol]
-    # X = df.drop([ccol], axis=1)
     X = df._get_numeric_data()
     columns = X.columns
     X = scaler.fit_transform(X)
     X = pd.DataFrame(X, columns=columns)
-    # X[ccol] = y
     X = X.merge(info, how="outer", left_index=True, right_index=True)
     return X
 
@@ -212,7 +209,10 @@ def cval(path, prefix, out_dir=""):
         path to create output folder.
     """
     data = pd.read_pickle(path)
-    data_ps = preprocess_and_scaledata(data, "llps")
+    y = data["llps"]
+    data_ps = preprocess_and_scaledata(data)
+    # re-add class column after scaling
+    data_ps["llps"] = y
     clf = RandomForestClassifier(max_depth=12, n_estimators=100)
     prediction, fi_data = predict_proteome(
         data_ps, clf, "llps", testing_size=0.2, remove_training=False
