@@ -13,6 +13,7 @@ from pathlib import Path
 from .matrix import MakeMatrix
 from loguru import logger
 
+global resource_root
 resource_root = Path(__file__).parent
 
 
