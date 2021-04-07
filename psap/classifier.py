@@ -13,11 +13,10 @@ from pathlib import Path
 from .matrix import MakeMatrix
 from loguru import logger
 
-global resource_root
-resource_root = Path(__file__).parent
 
-
-def annotate(df, labels=f"{resource_root}/data/assets/uniprot_ids.txt"):
+def annotate(df, labels=None):
+    if labels is None:
+        labels = Path(__file__).parent / "data/assets/uniprot_ids.txt"
     with open(labels) as f:
         uniprot_ids = [line.rstrip() for line in f]
     logger.debug("Adding known llps class labels from {l}", l=labels)
@@ -128,7 +127,7 @@ def train(
 
 def predict(
     path="",
-    model=f"{resource_root}/data/model/UP000005640_9606_llps.json",
+    model=None,
     prefix="",
     out_dir="",
 ):
@@ -143,6 +142,8 @@ def predict(
     out_dir:
         path to create output folder.
     """
+    if model is None:
+        model = Path(__file__).parent / "data/model/UP000005640_9606_llps.json"
     try:
         logger.info("Loading model: {m}", m=model)
         clf = skljson.from_json(model)
