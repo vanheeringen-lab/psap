@@ -5,6 +5,7 @@ from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from tqdm.auto import tqdm
 import time
 from scipy import signal
+from loguru import logger
 
 RESIDUES = [
     "A",
@@ -87,15 +88,15 @@ class MakeMatrix:
         ]
         for e in executables:
             start = time.time()
-            print(e)
             exec(e)
             end = time.time()
-            print(str(round(end - start, 2)) + "s " + e)
+            logger.debug(str(round(end - start, 2)) + "s " + e)
 
     def fasta2df(self):
         """
         Read peptide sequences and attributes from fasta file and convert to Pandas DataFrame.
         """
+        logger.debug("Converting peptide fasta to data frame")
         rows = list()
         with open(self.dbfasta) as f:
             for record in SeqIO.parse(self.dbfasta, "fasta"):
@@ -125,6 +126,7 @@ class MakeMatrix:
         """
         Adds fraction of amino acid residues (defined in RESIDUES) to data frame.
         """
+        logger.debug("Adding amino acid fractions")
         for res in RESIDUES:
             self.df["fraction_" + res] = (
                 self.df["sequence"].str.count(res) / self.df["sequence"].str.len()
@@ -147,6 +149,7 @@ class MakeMatrix:
             self.df.loc[index, "HydroPhobicIndex"] = HydroPhobicIndex(hpilst)
 
     def add_hydrophobic_features(self):
+        logger.debug("Adding hydrophobic features")
         hpi0, hpi1, hpi2, hpi3, hpi4, hpi5 = (
             list(),
             list(),
@@ -183,6 +186,7 @@ class MakeMatrix:
         self.df["hpi_<-2.5"] = hpi5
 
     def add_biochemical_combinations(self):
+        logger.debug("Adding biochemical combinations")
         """
         Adds biochemical combinations of amino acid residues to data frame.
         """
@@ -287,6 +291,7 @@ class MakeMatrix:
         """
         Add lowcomplexity score to data frame.
         """
+        logger.debug("Adding lowcomplexity score to data frame")
         lcs_window = 20
         lcs_cutoff = 7
         for index, row in self.df.iterrows():
@@ -306,6 +311,8 @@ class MakeMatrix:
         """
         Adds lowcomplexity features to data frame.
         """
+        logger.debug("Adding lowcomplexity features")
+
         n_window = 20
         cutoff = 7
         n_halfwindow = int(n_window / 2)
