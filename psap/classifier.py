@@ -111,7 +111,7 @@ def train(
     logger.debug(
         "Training RandomForest with {nin} instances and {nf} features",
         nf=len(X.columns),
-        nin=len(X.rows),
+        nin=len(X.index),
     )
     clf = RandomForestClassifier(
         n_jobs=32,
