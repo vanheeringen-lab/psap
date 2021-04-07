@@ -11,6 +11,7 @@ from sklearn.ensemble import RandomForestClassifier
 import sklearn_json as skljson
 from pathlib import Path
 from .matrix import MakeMatrix
+from loguru import logger
 
 
 def annotate(df, labels=None):
@@ -293,11 +294,14 @@ def predict(
         print(f"Loading model:{model}")
         clf = skljson.from_json(model)
     except Exception:
-        print("An error occured while loading the model from json")
+        logger.error("classifier {mod} not found. Does the file exist?", mod=model)
+    logger.debug("Adding biochemical features to {f}", f=path)
     mat = export_matrix(prefix=prefix, fasta_path=path, out_path=out_dir)
     # Preprocessing
+    logger.debug("Preprocessing dataset")
     data_ps = preprocess_and_scaledata(mat.df)
     X = data_ps.select_dtypes([np.number])
+    logger.debug("Predicting PSAP_score")
     psap_prediction = pd.DataFrame(index=data_ps["protein_name"])
     psap_prediction["PSAP_score"] = clf.predict_proba(X)[:, 1]
     psap_prediction["rank"] = 0
@@ -306,4 +310,6 @@ def predict(
     # # Make directory for output
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
-    psap_prediction.to_csv(out_dir / f"prediction_{prefix}.csv")
+    out_file= out_dir / f"prediction_{prefix}.csv")
+    logger.debug("Writing results to {csv}", csv=out_file)
+    psap_prediction.to_csv(out_file)
