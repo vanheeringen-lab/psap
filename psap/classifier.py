@@ -21,11 +21,10 @@ def annotate(df, labels=None):
         uniprot_ids = [line.rstrip() for line in f]
     logger.debug("Adding known llps class labels from {l}", l=labels)
     df["llps"] = 0
-    print("Adding labels to df")
     for prot_id in uniprot_ids:
         df.loc[df["uniprot_id"] == prot_id, "llps"] = 1
         if (len(df.loc[df["uniprot_id"] == prot_id])) == 0:
-            print(prot_id + " is not found.")
+            logger.info(prot_id + " is not found.")
     return df
 
 
@@ -109,7 +108,7 @@ def train(
     y = data_numeric["llps"]
     # train random forest classifier
     logger.debug(
-        "Training RandomForest with {nin} instances and {nf} features",
+        "Training RF with {nin} instances and {nf} features",
         nf=len(X.columns),
         nin=len(X.index),
     )
