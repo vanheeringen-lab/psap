@@ -108,7 +108,11 @@ def train(
     X = data_numeric.drop("llps", axis=1)
     y = data_numeric["llps"]
     # train random forest classifier
-    logger.debug("Training RandomForest for {nf} features", nf=len(X.columns))
+    logger.debug(
+        "Training RandomForest with {nin} instances and {nf} features",
+        nf=len(X.columns),
+        nin=len(X.rows),
+    )
     clf = RandomForestClassifier(
         n_jobs=32,
         class_weight="balanced",
