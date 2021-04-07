@@ -3,7 +3,9 @@ import argparse
 import sys
 from pathlib import Path
 import psap
-from psap.classifier import annotate, train, predict, cval, export_matrix
+from psap.classifier import annotate, train, predict, export_matrix
+import os
+from loguru import logger
 
 
 def main():
@@ -21,10 +23,7 @@ def main():
         help="adds biochemical features to a set of protein sequences in fasta format and writes it to a csv file",
     )
     psap_train = subparsers.add_parser("train", help="train psap model")
-    psap_predict = subparsers.add_parser("predict", help="predict classes")
-    psap_cval = subparsers.add_parser(
-        "cval", help="evaluate model using cross validation"
-    )
+    psap_predict = subparsers.add_parser("predict", help="predict PSAP score")
     psap_annotate.add_argument(
         "-f",
         "--fasta",
@@ -42,7 +41,7 @@ def main():
     psap_annotate.add_argument(
         "-o",
         "--out",
-        default="~",
+        default=os.getcwd(),
         required=False,
         help="Output directory to store annotated data frame in .csv format",
     )
@@ -56,8 +55,8 @@ def main():
     psap_train.add_argument(
         "-o",
         "--out",
-        default=None,
-        required=True,
+        default=os.getcwd(),
+        required=False,
         help="Output directory to store trained RandomForest classifier in json format",
     )
     psap_train.add_argument(
@@ -83,8 +82,8 @@ def main():
     psap_predict.add_argument(
         "-o",
         "--out",
-        default=None,
-        required=True,
+        default=os.getcwd(),
+        required=False,
         help="Output directory for psap prediction results",
     )
     psap_predict.add_argument(
@@ -94,23 +93,9 @@ def main():
         required=False,
         help=".txt file with llps uniprot ids (positive training labels)",
     )
-    psap_cval.add_argument(
-        "-f",
-        "--fasta",
-        default=None,
-        required=True,
-        help="Path to peptide fasta file",
-    )
-    psap_cval.add_argument(
-        "-o",
-        "--out",
-        default=None,
-        required=True,
-        help="Output directory for prediction results",
-    )
     args = parser.parse_args()
     # Pickle training-set
-    if args.command not in ["train", "predict", "annotate", "cval"]:
+    if args.command not in ["train", "predict", "annotate"]:
         parser.print_help()
 
     if args.command == "annotate":
@@ -134,13 +119,8 @@ def main():
             prefix=Path(args.out).stem,
             out_dir=args.out,
         )
-    elif args.command == "cval":
-        cval(
-            path=args.data_frame,
-            prefix=Path(args.out).stem,
-            out_dir=args.out,
-        )
 
 
 if __name__ == "__main__":
-    sys.exit(main())  # pragma: no cover
+    with logger.catch():
+        sys.exit(main())  # pragma: no cover
