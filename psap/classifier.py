@@ -145,7 +145,7 @@ def predict(
     if model is None:
         model = Path(__file__).parent / "data/model/UP000005640_9606_llps.json"
     try:
-        logger.info("Loading {m} from path", m=model)
+        logger.info("Loading model: {m}", m=model)
         clf = skljson.from_json(model)
     except Exception:
         logger.error("classifier {mod} not found. Does the file exist?", mod=model)
@@ -163,5 +163,5 @@ def predict(
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     out_file = out_dir / f"prediction_{prefix}.csv"
-    logger.info("Writing results to {csv}", csv=out_file)
+    logger.info("Writing results to: {csv}", csv=out_file)
     psap_prediction.to_csv(out_file)
