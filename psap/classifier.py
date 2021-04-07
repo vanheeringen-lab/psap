@@ -13,10 +13,10 @@ from pathlib import Path
 from .matrix import MakeMatrix
 from loguru import logger
 
+resource_root = Path(__file__).parent
 
-def annotate(df, labels=None):
-    if labels is None:
-        labels = Path(__file__).parent / "data/assets/uniprot_ids.txt"
+
+def annotate(df, labels=resource_root / "data/assets/uniprot_ids.txt"):
     with open(labels) as f:
         uniprot_ids = [line.rstrip() for line in f]
     logger.debug("Adding known llps class labels from {l}", l=labels)
@@ -36,7 +36,7 @@ def export_matrix(prefix="", fasta_path="", out_path=""):
         name: Name of the file.
         fasta_path: Path of the fasta file which needs to be featured.
     """
-    logger.debug("Adding biochemical features to {f}", f=fasta_path)
+    logger.debug("Starting to add biochemical features to {f}", f=fasta_path)
     data = MakeMatrix(fasta_path)
     now = datetime.datetime.now()
     date = str(now.day) + "-" + str(now.month) + "-" + str(now.year)
@@ -108,7 +108,7 @@ def train(
     X = data_numeric.drop("llps", axis=1)
     y = data_numeric["llps"]
     # train random forest classifier
-    logger.Debug("Training RandomForest for {nf} features", nf=len(X.columns))
+    logger.debug("Training RandomForest for {nf} features", nf=len(X.columns))
     clf = RandomForestClassifier(
         n_jobs=32,
         class_weight="balanced",
@@ -127,7 +127,7 @@ def train(
 
 def predict(
     path="",
-    model=None,
+    model=resource_root / "data/model/UP000005640_9606_llps.json",
     prefix="",
     out_dir="",
 ):
@@ -142,8 +142,6 @@ def predict(
     out_dir:
         path to create output folder.
     """
-    if model is None:
-        model = Path(__file__).parent / "data/model/UP000005640_9606_llps.json"
     try:
         logger.info("Loading model: {m}", m=model)
         clf = skljson.from_json(model)
