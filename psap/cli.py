@@ -5,6 +5,7 @@ from pathlib import Path
 import psap
 from psap.classifier import annotate, train, predict, export_matrix
 import os
+from loguru import logger
 
 
 def main():
@@ -121,4 +122,5 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())  # pragma: no cover
+    with logger.catch():
+        sys.exit(main())  # pragma: no cover
