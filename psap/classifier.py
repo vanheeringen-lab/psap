@@ -19,7 +19,7 @@ def annotate(df, labels=None):
         labels = Path(__file__).parent / "data/assets/uniprot_ids.txt"
     with open(labels) as f:
         uniprot_ids = [line.rstrip() for line in f]
-    logger.debug("Adding known llps class labels to {f}", f=path)
+    logger.debug("Adding known llps class labels from {l}", l=labels)
     df["llps"] = 0
     print("Adding labels to df")
     for prot_id in uniprot_ids:
@@ -36,7 +36,7 @@ def export_matrix(prefix="", fasta_path="", out_path=""):
         name: Name of the file.
         fasta_path: Path of the fasta file which needs to be featured.
     """
-    logger.debug("Adding biochemical features to {f}", f=path)
+    logger.debug("Adding biochemical features to {f}", f=fasta_path)
     data = MakeMatrix(fasta_path)
     now = datetime.datetime.now()
     date = str(now.day) + "-" + str(now.month) + "-" + str(now.year)
