@@ -310,6 +310,6 @@ def predict(
     # # Make directory for output
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
-    out_file= out_dir / f"prediction_{prefix}.csv")
+    out_file = out_dir / f"prediction_{prefix}.csv"
     logger.debug("Writing results to {csv}", csv=out_file)
     psap_prediction.to_csv(out_file)
