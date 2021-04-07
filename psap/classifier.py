@@ -16,7 +16,7 @@ from loguru import logger
 resource_root = Path(__file__).parent
 
 
-def annotate(df, labels=resource_root / "data/assets/uniprot_ids.txt"):
+def annotate(df, labels=f"{resource_root}/data/assets/uniprot_ids.txt"):
     with open(labels) as f:
         uniprot_ids = [line.rstrip() for line in f]
     logger.debug("Adding known llps class labels from {l}", l=labels)
@@ -127,7 +127,7 @@ def train(
 
 def predict(
     path="",
-    model=resource_root / "data/model/UP000005640_9606_llps.json",
+    model=f"{resource_root}/data/model/UP000005640_9606_llps.json",
     prefix="",
     out_dir="",
 ):
