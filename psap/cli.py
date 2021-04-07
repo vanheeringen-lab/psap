@@ -55,7 +55,7 @@ def main():
         "-o",
         "--out",
         default=os.getcwd(),
-        required=True,
+        required=False,
         help="Output directory to store trained RandomForest classifier in json format",
     )
     psap_train.add_argument(
