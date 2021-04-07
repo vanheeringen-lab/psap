@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 import psap
 from psap.classifier import annotate, train, predict, export_matrix
+import os
 
 
 def main():
@@ -39,7 +40,7 @@ def main():
     psap_annotate.add_argument(
         "-o",
         "--out",
-        default="~",
+        default=os.getcwd(),
         required=False,
         help="Output directory to store annotated data frame in .csv format",
     )
@@ -53,7 +54,7 @@ def main():
     psap_train.add_argument(
         "-o",
         "--out",
-        default=None,
+        default=os.getcwd(),
         required=True,
         help="Output directory to store trained RandomForest classifier in json format",
     )
@@ -80,8 +81,8 @@ def main():
     psap_predict.add_argument(
         "-o",
         "--out",
-        default=None,
-        required=True,
+        default=os.getcwd(),
+        required=False,
         help="Output directory for psap prediction results",
     )
     psap_predict.add_argument(
