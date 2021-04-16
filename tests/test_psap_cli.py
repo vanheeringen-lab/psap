@@ -41,5 +41,4 @@ def test_feature_equal():
     )
     matrix = MakeMatrix(fasta)
     clf = skljson.from_json(model_internal)
-    print(clf)
     assert clf.n_features_ == len(matrix.df.columns) - 4
