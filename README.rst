@@ -3,7 +3,7 @@ psap
 ========
 
 
-.. image:: https://github.com/vanheeringen-lab/psap/blob/master/.github/workflows/python-app.yml/badge.svg
+.. image:: https://github.com/vanheeringen-lab/psap/blob/master/.github/workflows/tests/badge.svg
         :target: https://github.com/vanheeringen-lab/psap/blob/master/.github/workflows/python-app.yml
 
 
