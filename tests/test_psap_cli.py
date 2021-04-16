@@ -31,7 +31,7 @@ def test_fasta_exists():
 def test_make_matrix():
     fasta = Path(__file__).parent.parent / "psap/data/testing/testset.fasta"
     matrix = MakeMatrix(fasta)
-    assert len(matrix.df.columns) == 91
+    assert len(matrix.df.columns) == 99
 
 
 def test_feature_equal():
