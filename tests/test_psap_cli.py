@@ -11,38 +11,35 @@ from psap.matrix import MakeMatrix
 
 def test_model_exists():
     """Verify that the default model is part of the installation."""
-    model_internal = Path(__file__).parent.parent / "psap/data/model/UP000005640_9606_llps.json"
+    model_internal = (
+        Path(__file__).parent.parent / "psap/data/model/UP000005640_9606_llps.json"
+    )
     assert Path(model_internal).is_file()
+
 
 def test_wl_exists():
     """Verify that the default whitelist is part of the installation."""
-    wl_internal =  Path(__file__).parent.parent / "psap/data/assets/uniprot_ids.txt"
+    wl_internal = Path(__file__).parent.parent / "psap/data/assets/uniprot_ids.txt"
     assert Path(wl_internal).is_file()
 
+
 def test_fasta_exists():
-    fasta =  Path(__file__).parent.parent / "psap/data/testing/testset.fasta"
+    fasta = Path(__file__).parent.parent / "psap/data/testing/testset.fasta"
     assert Path(fasta).is_file()
 
+
 def test_make_matrix():
-    fasta =  Path(__file__).parent.parent / "psap/data/testing/testset.fasta"
+    fasta = Path(__file__).parent.parent / "psap/data/testing/testset.fasta"
     matrix = MakeMatrix(fasta)
     assert len(matrix.df.columns) == 91
-    
+
+
 def test_feature_equal():
-    fasta =  Path(__file__).parent.parent / "psap/data/testing/testset.fasta"
-    model_internal = Path(__file__).parent.parent / "psap/data/model/UP000005640_9606_llps.json"
+    fasta = Path(__file__).parent.parent / "psap/data/testing/testset.fasta"
+    model_internal = (
+        Path(__file__).parent.parent / "psap/data/model/UP000005640_9606_llps.json"
+    )
     matrix = MakeMatrix(fasta)
     clf = skljson.from_json(model_internal)
     print(clf)
-    assert clf.n_features_ == len(matrix.df.columns)-4
-   
-    
-
-    
-
-            
-        
-        
-        
-        
-        
+    assert clf.n_features_ == len(matrix.df.columns) - 4
