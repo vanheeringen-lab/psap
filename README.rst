@@ -3,15 +3,9 @@ psap
 ========
 
 
-.. image:: https://img.shields.io/pypi/v/psap_cli.svg
-        :target: https://pypi.python.org/pypi/psap_cli
+.. image:: https://github.com/vanheeringen-lab/psap/blob/master/.github/workflows/python-app.yml/badge.svg
+        :target: https://github.com/vanheeringen-lab/psap/blob/master/.github/workflows/python-app.yml
 
-.. image:: https://img.shields.io/travis/tilschaef/psap_cli.svg
-        :target: https://travis-ci.com/tilschaef/psap_cli
-
-.. image:: https://readthedocs.org/projects/psap-cli/badge/?version=latest
-        :target: https://psap-cli.readthedocs.io/en/latest/?badge=latest
-        :alt: Documentation Status
 
 CLI interface for the PSAP classifier. PSAP implements a RandomForest approach to predict the probability of proteins to mediate protein phase separation (PPS). Initially, a set of protein sequences is annotated with biochemical features wich are subsequently used to train a RandomForest (scikit-learn) classifier. The trained classifier is exported to json format and can be used to predict the llps class probability (PSAP_score) for new samples. 
 
