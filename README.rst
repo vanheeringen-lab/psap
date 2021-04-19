@@ -23,20 +23,20 @@ Getting Started
 ================
 
 1. *Install psap*
---------
+----------------------
 .. code-block:: bash
    
    pip install psap
    
 2. *Train classifier*
---------
+-----------------------
 .. code-block:: python
 
    psap train -f /path/to/peptide-trainingset.fasta -l /path/top/known/pps-proteins.txt (optional)  -o /output/directory (optional)   
 The trained RandomForest classifier is exported to json format and stored in the output directory.
 
 3. *Predict llps score for peptide instances*
---------
+-----------------------------------------------
 .. code-block:: python
 
    psap predict -f /path/to/peptid-testset.fasta -m /path/to/model.json (optional) -o /output/directory (optional)
@@ -44,7 +44,7 @@ The trained RandomForest classifier is exported to json format and stored in the
 When no model (-m) is provided psap loads the default classifier stored in /data/model.
 
 4. *Annotate petides (optional)*
---------
+---------------------------------
 .. code-block:: python
 
    psap annotate -f /path/to/peptide.fasta  -l /path/top/known/pps-proteins.txt (optional) -o /output/directory (optional)    
