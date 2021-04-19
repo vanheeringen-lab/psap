@@ -26,8 +26,7 @@ Getting Started
 --------
 .. code-block:: bash
    
-   git clone https://github.com/vanheeringen-lab/psap.git
-   cd psap && python setup.py install
+   pip install psap
    
 2. *Train classifier*
 --------
@@ -57,7 +56,7 @@ Annotates a peptide fasta with biochemical features. This step is included in tr
 Credits
 -------
 
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
+This package was adapted from the cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
 
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
