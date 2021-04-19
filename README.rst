@@ -18,9 +18,9 @@ The default model was trained on the `human reference proteome <ftp://ftp.ebi.ac
 
 * Free software: MIT license
 
-========
+================
 Getting Started
-========
+================
 
 1. *Install psap*
 --------
