@@ -16,7 +16,7 @@ setup(
     author=["Juriaan Jansen", "Tilman Schaefers <tilman.schaefers@ru.nl>"],
     python_requires=">=3.7",
     classifiers=[
-        "Development Status :: 2 - Pre-Alpha",
+        "Development Status :: 5 - Stable",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
         "Natural Language :: English",
@@ -41,5 +41,5 @@ setup(
     install_requires=requirements,
     packages=find_packages(include=["psap", "psap.*"]),
     include_package_data=True,
-    url="https://github.com/tilschaef/psap",
+    url="https://github.com/vanheeringen-lab/psap",
 )
