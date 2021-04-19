@@ -33,6 +33,7 @@ setup(
         ],
     },
     license="MIT license",
+    long_description_content_type='text/x-rst',
     long_description=readme,
     keywords="psap",
     name="psap",
