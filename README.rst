@@ -32,7 +32,8 @@ Getting Started
 -----------------------
 .. code-block:: python
 
-   psap train -f /path/to/peptide-trainingset.fasta -l /path/top/known/pps-proteins.txt (optional)  -o /output/directory (optional)   
+   psap train -f /path/to/peptide-trainingset.fasta -l /path/top/known/pps-proteins.txt (optional)  -o /output/directory (optional)
+      
 The trained RandomForest classifier is exported to json format and stored in the output directory.
 
 3. *Predict llps score for peptide instances*
