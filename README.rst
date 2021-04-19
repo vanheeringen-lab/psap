@@ -6,6 +6,9 @@ psap
 .. image:: https://github.com/vanheeringen-lab/psap/actions/workflows/python-app.yml/badge.svg
    :target:  https://github.com/vanheeringen-lab/psap
 
+.. image:: https://github.com/vanheeringen-lab/psap/actions/workflows/continuous-deployment.yml/badge.svg
+   :target:  https://github.com/vanheeringen-lab/psap
+
 .. image:: https://badge.fury.io/py/psap.svg
    :target:  https://github.com/vanheeringen-lab/psap
 
