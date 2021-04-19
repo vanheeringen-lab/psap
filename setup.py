@@ -16,7 +16,7 @@ setup(
     author=["Juriaan Jansen", "Tilman Schaefers <tilman.schaefers@ru.nl>"],
     python_requires=">=3.7",
     classifiers=[
-        "Development Status :: 5 - Stable",
+        "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
         "Natural Language :: English",
@@ -33,7 +33,7 @@ setup(
         ],
     },
     license="MIT license",
-    long_description_content_type='text/x-rst',
+    long_description_content_type="text/x-rst",
     long_description=readme,
     keywords="psap",
     name="psap",
