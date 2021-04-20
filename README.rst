@@ -10,7 +10,7 @@ psap
    :target:  https://github.com/vanheeringen-lab/psap
 
 .. image:: https://badge.fury.io/py/psap.svg
-   :target:  https://github.com/vanheeringen-lab/psap
+   :target:  https://pypi.org/project/psap/
 
 CLI interface for the PSAP classifier. PSAP implements a RandomForest approach to predict the probability of proteins to mediate protein phase separation (PPS). Initially, a set of protein sequences is annotated with biochemical features wich are subsequently used to train a RandomForest (scikit-learn) classifier. The trained classifier is exported to json format and can be used to predict the llps class probability (PSAP_score) for new samples. 
 
