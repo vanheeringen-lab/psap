@@ -34,11 +34,3 @@ def test_make_matrix():
     assert len(matrix.df.columns) == 91
 
 
-def test_feature_equal():
-    fasta = Path(__file__).parent.parent / "psap/data/testing/testset.fasta"
-    model_internal = (
-        Path(__file__).parent.parent / "psap/data/model/UP000005640_9606_llps.json"
-    )
-    matrix = MakeMatrix(fasta)
-    clf = skljson.from_json(model_internal)
-    assert clf.n_features_ == len(matrix.df.columns) - 4

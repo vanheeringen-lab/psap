@@ -22,9 +22,10 @@ requirements = [
     "sklearn-json>=0.1.0",
     "versioneer>=0.19",
     "loguru>=0.5.3",
-    "pytest>=6.2.3",
     "black>=20.8b1",
 ]
+
+
 
 setup(
     author=["Juriaan Jansen", "Tilman Schaefers <tilman.schaefers@ru.nl>"],
