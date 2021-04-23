@@ -25,6 +25,8 @@ requirements = [
     "black>=20.8b1",
 ]
 
+
+
 setup(
     author=["Juriaan Jansen", "Tilman Schaefers <tilman.schaefers@ru.nl>"],
     python_requires=">=3.7",
@@ -54,7 +56,7 @@ setup(
     cmdclass=versioneer.get_cmdclass(),
     install_requires=requirements,
     setup_requires=['pytest-runner', 'flake8'],
-    tests_require=['pytest'],
+    tests_require=['pytest'] + requirements,
     packages=find_packages(include=["psap", "psap.*"]),
     include_package_data=True,
     url="https://github.com/vanheeringen-lab/psap",
