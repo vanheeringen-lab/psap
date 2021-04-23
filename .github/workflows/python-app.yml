@@ -23,7 +23,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pandas biopython tqdm scipy loguru seaborn sklearn_json
+        pip install pandas biopython tqdm scip seaborn sklearn_json
         pip install flake8 pytest 
     - name: Lint with flake8
       run: |
