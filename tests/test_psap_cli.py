@@ -5,6 +5,8 @@
 
 import pytest
 import sklearn_json as skljson
+import psap
+
 from pathlib import Path
 from psap.matrix import MakeMatrix
 
