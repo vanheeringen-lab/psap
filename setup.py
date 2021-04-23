@@ -26,7 +26,6 @@ requirements =
         "pytest>=6.2.3",
         "black>=20.8b1",
     ],
-)
 
 setup(
     author=["Juriaan Jansen", "Tilman Schaefers <tilman.schaefers@ru.nl>"],
