@@ -8,6 +8,26 @@ import versioneer
 with open("README.rst") as readme_file:
     readme = readme_file.read()
 
+requirements = 
+    [
+        "pip==19.2.3",
+        "wheel>=0.36.2",
+        "scikit-learn>=-0.21.3",
+        "twine>=1.14.0",
+        "pandas>=1.0.1",
+        "biopython>=1.73",
+        "scipy>=1.2.0",
+        "tqdm>=4.38.0",
+        "seaborn>=0.11.1",
+        "matplotlib>=3.3.4",
+        "sklearn-json>=0.1.0",
+        "versioneer>=0.19",
+        "loguru>=0.5.3",
+        "pytest>=6.2.3",
+        "black>=20.8b1",
+    ],
+)
+
 setup(
     author=["Juriaan Jansen", "Tilman Schaefers <tilman.schaefers@ru.nl>"],
     python_requires=">=3.7",
@@ -35,23 +55,7 @@ setup(
     name="psap",
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
-    install_requires=[
-        "pip==19.2.3",
-        "wheel>=0.36.2",
-        "scikit-learn>=-0.21.3",
-        "twine>=1.14.0",
-        "pandas>=1.0.1",
-        "biopython>=1.73",
-        "scipy>=1.2.0",
-        "tqdm>=4.38.0",
-        "seaborn>=0.11.1",
-        "matplotlib>=3.3.4",
-        "sklearn-json>=0.1.0",
-        "versioneer>=0.19",
-        "loguru>=0.5.3",
-        "pytest>=6.2.3",
-        "black>=20.8b1",
-    ],
+    install_requires=requirements,
     packages=find_packages(include=["psap", "psap.*"]),
     include_package_data=True,
     url="https://github.com/vanheeringen-lab/psap",
