@@ -56,7 +56,7 @@ setup(
     cmdclass=versioneer.get_cmdclass(),
     install_requires=requirements,
     setup_requires=['pytest-runner', 'flake8'],
-    tests_require=['pytest'] + requirements,
+    tests_require=['pytest']
     packages=find_packages(include=["psap", "psap.*"]),
     include_package_data=True,
     url="https://github.com/vanheeringen-lab/psap",
