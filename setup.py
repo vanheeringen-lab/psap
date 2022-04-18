@@ -2,7 +2,8 @@
 
 """The setup script."""
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
+
 import versioneer
 
 with open("README.rst") as readme_file:
@@ -11,7 +12,7 @@ with open("README.rst") as readme_file:
 requirements = [
     "pip==19.2.3",
     "wheel>=0.36.2",
-    "scikit-learn>=-0.21.3",
+    "scikit-learn~=0.21",
     "twine>=1.14.0",
     "pandas>=1.0.1",
     "biopython>=1.73",
@@ -24,7 +25,6 @@ requirements = [
     "loguru>=0.5.3",
     "black>=20.8b1",
 ]
-
 
 
 setup(
