@@ -1,17 +1,19 @@
+import datetime
 import os
+from pathlib import Path
+from random import sample
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-import matplotlib.pyplot as plt
-import datetime
-from random import sample
-from tqdm.notebook import tqdm
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.ensemble import RandomForestClassifier
 import sklearn_json as skljson
-from pathlib import Path
-from .matrix import MakeMatrix
 from loguru import logger
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import MinMaxScaler
+from tqdm.notebook import tqdm
+
+from .matrix import MakeMatrix
 
 
 def annotate(df, labels=None):
@@ -150,8 +152,9 @@ def predict(
     try:
         logger.info("Loading model: {m}", m=model)
         clf = skljson.from_json(model)
-    except Exception:
+    except Exception as error:
         logger.error("classifier {mod} not found. Does the file exist?", mod=model)
+        logger.error(error)
     mat = export_matrix(prefix=prefix, fasta_path=path, out_path=out_dir)
     # Preprocessing
     data_ps = preprocess_and_scaledata(mat.df)
