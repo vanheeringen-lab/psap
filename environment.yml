@@ -1,0 +1,19 @@
+name: psap
+
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+
+dependencies:
+  - matplotlib>=3.3.4
+  - seaborn>=0.11.1
+  - sklearn-json>=0.1.0
+  - biopython>=1.73
+  - pandas>=1.0.1
+  - scikit-learn~=0.21
+  - tqdm>=4.38.0
+  - loguru>=0.5.3
+  - black>=20.8b1
+  - pytest
+  - setuptools
