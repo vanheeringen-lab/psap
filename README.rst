@@ -47,7 +47,7 @@ Getting Started
 -----------------------
 .. code-block:: python
 
-   psap train -f /path/to/peptide-trainingset.fasta -l /path/top/known/pps-proteins.txt (optional)  -o /output/directory (optional)
+   psap train -f /path/to/peptide-trainingset.fasta -l /path/to/known/pps-proteins.txt (optional) -o /path/to/output/directory (optional)
       
 The trained RandomForest classifier will be exported to json format and stored in the output directory.
 
@@ -55,7 +55,7 @@ The trained RandomForest classifier will be exported to json format and stored i
 -----------------------------------------------
 .. code-block:: python
 
-   psap predict -f /path/to/peptid-testset.fasta -m /path/to/model.json (optional) -o /output/directory (optional)
+   psap predict -f /path/to/peptide-testset.fasta -m /path/to/model.json (optional) -o /path/to/output/directory (optional)
    
 psap loads the default classifier stored in `/data/model` when no model is provided with `-m`.
 An example peptide fasta file can be found in the `psap/data/testset` folder. 
@@ -64,7 +64,7 @@ An example peptide fasta file can be found in the `psap/data/testset` folder.
 ---------------------------------
 .. code-block:: python
 
-   psap annotate -f /path/to/peptide.fasta  -l /path/top/known/pps-proteins.txt (optional) -o /output/directory (optional)    
+   psap annotate -f /path/to/peptide.fasta -l /path/to/known/pps-proteins.txt (optional) -o /path/to/output/directory (optional)    
 
 Manually annotate a peptide fasta with biochemical features. This step is included in train and predict.
 
