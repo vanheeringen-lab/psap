@@ -57,8 +57,8 @@ The trained RandomForest classifier is exported to json format and stored in the
 
    psap predict -f /path/to/peptid-testset.fasta -m /path/to/model.json (optional) -o /output/directory (optional)
    
-| psap loads the default classifier stored in /data/model when no model is provided with `-m`. 
- | An example peptide fasta file can be found in the `psap/data/testset` folder. 
+psap loads the default classifier stored in /data/model when no model is provided with `-m`. "\" 
+An example peptide fasta file can be found in the `psap/data/testset` folder. 
 
 4. *Annotate petides (optional)*
 ---------------------------------
