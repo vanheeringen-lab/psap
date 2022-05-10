@@ -61,7 +61,7 @@ psap loads the default classifier stored in `/data/model` when no model is provi
 An example peptide fasta file can be found in the `psap/data/testset` folder. 
 
 4. *Annotate peptide sequences (optional)*
----------------------------------
+-------------------------------------------
 .. code-block:: python
 
    psap annotate -f /path/to/peptide.fasta -l /path/to/known/pps-proteins.txt (optional) -o /path/to/output/directory (optional)    
