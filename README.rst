@@ -37,7 +37,7 @@ Getting Started
    
    pip install psap
 
-**bioconda**
+**conda**
 
 .. code-block:: bash
    
@@ -57,7 +57,8 @@ The trained RandomForest classifier is exported to json format and stored in the
 
    psap predict -f /path/to/peptid-testset.fasta -m /path/to/model.json (optional) -o /output/directory (optional)
    
-psap loads the default classifier stored in /data/model when no model is provided with `-m`. An example peptide fasta file can be found in `psap/data/testset`. 
+psap loads the default classifier stored in /data/model when no model is provided with `-m`. 
+An example peptide fasta file can be found in the `psap/data/testset` folder. 
 
 4. *Annotate petides (optional)*
 ---------------------------------
@@ -65,7 +66,7 @@ psap loads the default classifier stored in /data/model when no model is provide
 
    psap annotate -f /path/to/peptide.fasta  -l /path/top/known/pps-proteins.txt (optional) -o /output/directory (optional)    
 
-Annotates a peptide fasta with biochemical features. This step is included in train and predict.
+Annotate a peptide fasta with biochemical features. This step is included in train and predict.
 
 
 
