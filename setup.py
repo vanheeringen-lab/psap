@@ -10,7 +10,7 @@ with open("README.rst") as readme_file:
     readme = readme_file.read()
 
 requirements = [
-    "pip==19.2.3",
+    "pip>=21.1",
     "wheel>=0.36.2",
     "scikit-learn~=0.21",
     "twine>=1.14.0",
