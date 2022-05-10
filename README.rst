@@ -15,7 +15,7 @@ psap
 .. image:: https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat
    :target:  https://anaconda.org/bioconda/psap
  
-CLI interface for the PSAP classifier. PSAP implements a RandomForest approach to predict the probability of proteins to mediate protein phase separation (PPS). Initially, a set of protein sequences is annotated with biochemical features wich are subsequently used to train a RandomForest (scikit-learn) classifier. The trained classifier is exported to json format and can be used to predict the llps class probability (PSAP_score) for new samples. 
+CLI interface for the PSAP classifier. PSAP implements a RandomForest approach to predict the probability of proteins to mediate protein phase separation (PPS). Initially, a set of protein sequences is annotated with biochemical features which are subsequently used to train a RandomForest (scikit-learn) classifier. The trained classifier is afterwards exported to json format and can be used to predict the llps class probability (PSAP_score) for unseen protein sequences. 
 
 The default model was trained on the `human reference proteome <ftp://ftp.ebi.ac.uk/pub/databases/reference_proteomes/QfO/Eukaryota/UP000005640_9606.fasta.gz>`_ with a list of literature curated PPS proteins for positive class labeling. Both can be found in /data.   
 
@@ -31,33 +31,42 @@ Getting Started
 
 1. *Install psap*
 ----------------------
+**pip**
+
 .. code-block:: bash
    
    pip install psap
+
+**conda**
+
+.. code-block:: bash
+   
+   conda install bioconda::psap
    
 2. *Train classifier*
 -----------------------
 .. code-block:: python
 
-   psap train -f /path/to/peptide-trainingset.fasta -l /path/top/known/pps-proteins.txt (optional)  -o /output/directory (optional)
+   psap train -f /path/to/peptide-trainingset.fasta -l /path/to/known/pps-proteins.txt (optional) -o /path/to/output/directory (optional)
       
-The trained RandomForest classifier is exported to json format and stored in the output directory.
+The trained RandomForest classifier will be exported to json format and stored in the output directory.
 
-3. *Predict llps score for peptide instances*
+3. *Predict llps score for new peptide instances*
 -----------------------------------------------
 .. code-block:: python
 
-   psap predict -f /path/to/peptid-testset.fasta -m /path/to/model.json (optional) -o /output/directory (optional)
+   psap predict -f /path/to/peptide-testset.fasta -m /path/to/model.json (optional) -o /path/to/output/directory (optional)
    
-When no model (-m) is provided psap loads the default classifier stored in /data/model.
+psap loads the default classifier stored in `/data/model` when no model is provided with `-m`.
+An example peptide fasta file can be found in the `psap/data/testset` folder. 
 
-4. *Annotate petides (optional)*
+4. *Annotate peptide sequences (optional)*
 ---------------------------------
 .. code-block:: python
 
-   psap annotate -f /path/to/peptide.fasta  -l /path/top/known/pps-proteins.txt (optional) -o /output/directory (optional)    
+   psap annotate -f /path/to/peptide.fasta -l /path/to/known/pps-proteins.txt (optional) -o /path/to/output/directory (optional)    
 
-Annotates a peptide fasta with biochemical features. This step is included in train and predict.
+Manually annotate a peptide fasta with biochemical features. This step is included in train and predict.
 
 
 
