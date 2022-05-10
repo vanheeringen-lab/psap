@@ -51,7 +51,7 @@ Getting Started
       
 The trained RandomForest classifier will be exported to json format and stored in the output directory.
 
-3. *Predict llps score for new peptide instances*
+3. *Predict llps score*
 -----------------------------------------------
 .. code-block:: python
 
